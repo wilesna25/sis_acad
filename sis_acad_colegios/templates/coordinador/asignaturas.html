@@ -87,9 +87,9 @@
     <script type="text/javascript">
        $(document).ready( function () {
             tablaAsignaturas = $('#tablaAsignaturas').DataTable({
-                    responsive : true,
-                    autoWidth : false
-                    "ajax":{
+                    "responsive" : true,
+                    "autoWidth" : false,
+                    ajax:{
                         "url": "coordinado/docentes/ver_asignaturas/",
                         "method": 'POST',
                         "data":{'opcion':'opcion'},

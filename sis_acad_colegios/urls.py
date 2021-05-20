@@ -12,6 +12,8 @@ urlpatterns = [
     path('coordinador/clases/', views.crud_clases, name="crud_clases"),
     path('coordinador/periodos_academicos/', views.crud_periodos_academicos, name="crud_periodos_academicos"),
 
+
+
     #DOCENTE PATHS
     path('docente/asistencia/', views.crud_asistencia, name="crud_asistencia"),
     path('docente/calificaciones/', views.crud_calificaciones, name="crud_calificaciones"),

@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.crud_docentes, name="crud_docentes"),
     #COORDINADOR PATHS
     path('coordinador/docentes/', views.crud_docentes, name="crud_docentes"),
+    path('coordinado/docentes/list_docentes/', views.list_docentes, name="list_docentes"),
     path('coordinador/grupos/', views.crud_grupos, name="crud_grupos"),
     path('coordinador/matriculas/', views.crud_matriculas, name="crud_matriculas"),
     path('coordinador/asignaturas/', views.crud_asignaturas, name="crud_asignaturas"),

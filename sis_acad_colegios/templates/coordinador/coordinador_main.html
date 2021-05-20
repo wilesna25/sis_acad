@@ -5,10 +5,14 @@
         <title>Coordinador - Sede Educativa</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         {% load static %}
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        {% block head %}
+
+        {% endblock head %}
      </head>
   <body>
 
@@ -29,9 +33,6 @@
                   <a href="{% url 'crud_grupos' %}"><span class="fa fa-user mr-3"></span> Grupos </a>
               </li>
               <li>
-                <a href="{% url 'crud_matriculas' %}"><span class="fa fa-sticky-note mr-3"></span> Matrículas</a>
-              </li>
-              <li>
                 <a href="{% url 'crud_asignaturas' %}"><span class="fa fa-paper-plane mr-3"></span> Asignaturas</a>
               </li>
               <li>
@@ -39,6 +40,9 @@
               </li>
               <li>
                 <a href="{% url 'crud_periodos_academicos' %}"><span class="fa fa-sticky-note mr-3"></span> Periodos académicos</a>
+              </li>
+              <li>
+                <a href="{% url 'crud_matriculas' %}"><span class="fa fa-sticky-note mr-3"></span> Matrículas</a>
               </li>
             </ul>
     	</nav>
@@ -53,10 +57,11 @@
             </div>
         </div>
     </div>
-
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+  {% block js %}
+  {% endblock js %}
   </body>
 </html>

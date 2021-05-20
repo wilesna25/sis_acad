@@ -1,6 +1,8 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 # COORDINADOR VIEWS
+
 
 def crud_asignaturas(request):
     context = {}
@@ -15,6 +17,14 @@ def crud_clases(request):
 def crud_docentes(request):
     context = {}
     return render(request, 'coordinador/docentes.html', context)
+
+
+def list_docentes(request):
+    response = HttpResponse()
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        response.write("hola mundo")
 
 
 def crud_estudiantes(request):

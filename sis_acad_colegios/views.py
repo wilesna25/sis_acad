@@ -1,14 +1,133 @@
+import json
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import *
+from .forms import AsignaturaForm, SedeForm
 
 # COORDINADOR VIEWS
 
-
+#ASIGNATURAS
 def crud_asignaturas(request):
     context = {}
     return render(request, 'coordinador/asignaturas.html', context)
 
+class listar_asignaturas(ListView):
+    model = Asignaturas
 
+    def get_queryset(self):
+        return self.model.objects.all()
+    
+    def post(self, request, *args, **kwargs):
+        lista_asignaturas = []
+        for asignatura in self.get_queryset():
+            data_asignatura = {}
+            data_asignatura['id']=asignatura.id
+            data_asignatura['asignatura']=asignatura.asignatura
+            data_asignatura['descripcion']=asignatura.descripcion
+            lista_asignaturas.append(data_asignatura)
+        data = json.dumps(lista_asignaturas)
+        return HttpResponse(data,'application/json')
+
+
+class crear_asignaturas(CreateView):
+    model = Asignaturas
+    form = AsignaturaForm()
+
+    def post(self, request, *args, **kwargs):
+        self.form = AsignaturaForm(request.POST)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('done','application/json')
+        return HttpResponse('error', 'application/json')
+
+class editar_asignaturas(UpdateView):
+    model = Asignaturas
+    form = AsignaturaForm()
+
+    def post(self, request, *args, **kwargs):
+        asignatura = Asignaturas.objects.get(id=request.POST['asignatura_id'])
+        self.form = AsignaturaForm(request.POST, instance=asignatura)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('done','application/json')
+        return HttpResponse('error', 'application/json')
+
+class eliminar_asignaturas(DeleteView):
+    model = Asignaturas
+
+    def get_query(self, asignatura_id):
+        return self.model.objects.get(id=asignatura_id)
+
+    def post(self, request, *args, **kwargs):
+        asignatura = self.get_query(request.POST['asignatura_id'])
+        asignatura.delete()
+        return HttpResponse('drop', 'application/json')
+
+
+#Sedes
+def crud_sedes(request):
+    context = {}
+    return render(request, 'coordinador/sedes.html', context)
+
+class listar_sedes(ListView):
+    model = Sedes
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        lista_sedes = []
+        for sede in self.get_queryset():
+            data_sede = {}
+            data_sede['id'] = sede.id
+            data_sede['nombre'] = sede.nombre
+            data_sede['direccion'] = sede.direccion
+            data_sede['telefono'] = sede.telefono
+            lista_sedes.append(data_sede)
+        data = json.dumps(lista_sedes)
+        return HttpResponse(data, 'application/json')
+
+
+class crear_sedes(CreateView):
+    model = Sedes
+    form = SedeForm()
+
+    def post(self, request, *args, **kwargs):
+        self.form = SedeForm(request.POST)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('done', 'application/json')
+        return HttpResponse('error', 'application/json')
+
+
+class editar_sedes(UpdateView):
+    model = Sedes
+    form = SedeForm()
+
+    def post(self, request, *args, **kwargs):
+        sede = Sedes.objects.get(id=request.POST['id'])
+        self.form = SedeForm(request.POST, instance=sede)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('done', 'application/json')
+        return HttpResponse('error', 'application/json')
+
+
+class eliminar_sedes(DeleteView):
+    model = Sedes
+
+    def get_query(self, id):
+        return self.model.objects.get(id=id)
+
+    def post(self, request, *args, **kwargs):
+        asignatura = self.get_query(request.POST['id'])
+        asignatura.delete()
+        return HttpResponse('drop', 'application/json')
+
+
+#Clases
 def crud_clases(request):
     context = {}
     return render(request, 'coordinador/clases.html', context)

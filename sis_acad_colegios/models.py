@@ -18,20 +18,41 @@ class Ciudades(models.Model):
     def __str__(self):
         return self.ciudad
 
+
 class Tipos_documentos(models.Model):
     tipo_documento = models.CharField(max_length=200)
+
 
 class Estratos_sociales(models.Model):
     estrato_social = models.CharField(max_length=200)
 
+
 class Grupos_sanguineos(models.Model):
     grupo_sanguineo = models.CharField(max_length=200)
+
 
 class Tipos_poblaciones(models.Model):
     tipo_poblacion = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return self.tipo_poblacion
+
+
+class Sedes(models.Model):
+    nombre = models.CharField(max_length=200, null=True)
+    direccion = models.CharField(max_length=500, null=True)
+    telefono = models.IntegerField()
+
+    def __str__(self):
+        return self.nombre
+
+
+class Asignaturas(models.Model):
+    asignatura = models.CharField(max_length=200, null=True)
+    descripcion = models.CharField(max_length=500, null=True)
+
+    def __str__(self):
+        return self.asignatura
 
 class Niveles_academicos_docentes(models.Model):
     nivel_academico = models.CharField(max_length=200, null=True)

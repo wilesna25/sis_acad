@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
     <head>
@@ -27,10 +27,16 @@
 	  		<h1><a href="index.html" class="logo">Coordinador</a></h1>
             <ul class="list-unstyled components mb-5">
               <li>
-                  <a href="{% url 'crud_docentes' %}"><span class="fa fa-user mr-3"></span> Docentes </a>
+                  <a href="{% url 'crud_sedes' %}"><span class="fa fa-user mr-3"></span> Sedes </a>
               </li>
               <li>
                   <a href="{% url 'crud_grupos' %}"><span class="fa fa-user mr-3"></span> Grupos </a>
+              </li>
+              <li>
+                  <a href="{% url 'crud_docentes' %}"><span class="fa fa-user mr-3"></span> Docentes </a>
+              </li>
+              <li>
+                <a href="{% url 'crud_asignaturas' %}"><span class="fa fa-paper-plane mr-3"></span> Áreas</a>
               </li>
               <li>
                 <a href="{% url 'crud_asignaturas' %}"><span class="fa fa-paper-plane mr-3"></span> Asignaturas</a>
@@ -61,6 +67,7 @@
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
   {% block js %}
   {% endblock js %}
   </body>

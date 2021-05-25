@@ -47,9 +47,17 @@ class Sedes(models.Model):
         return self.nombre
 
 
+class AreasAsignaturas(models.Model):
+    area = models.CharField(max_length=200, null=True)
+    descripcion = models.CharField(max_length=500, null=True)
+
+    def __str__(self):
+        return self.area
+
 class Asignaturas(models.Model):
     asignatura = models.CharField(max_length=200, null=True)
     descripcion = models.CharField(max_length=500, null=True)
+    area = models.ForeignKey(AreasAsignaturas,  on_delete=models.CASCADE)
 
     def __str__(self):
         return self.asignatura
@@ -67,8 +75,25 @@ class Jornadas(models.Model):
     def __str__(self):
         return self.jornada
 
-class Personas(models.Model):
+class Docentes(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    dni = models.IntegerField(primary_key=True)
+    nombres = models.CharField(max_length=200, null=True)
+    apellidos = models.CharField(max_length=200, null=True)
+    direccion = models.CharField(max_length=200, null=True)
+    telefono  = models.IntegerField(null=True)
+    correo  = models.CharField(max_length=200, null=True)
+    fecha_nacimiento = models.DateField(null=True)
+    eps = models.ForeignKey(Eps, on_delete=models.DO_NOTHING)
+    tipo_poblacion = models.ForeignKey(Tipos_poblaciones, on_delete=models.DO_NOTHING)
+    departamento = models.ForeignKey(Departamentos, on_delete=models.DO_NOTHING)
+    ciudad = models.ForeignKey(Ciudades, on_delete=models.DO_NOTHING)
+    grupo_sanguineo = models.ForeignKey(Grupos_sanguineos, on_delete=models.DO_NOTHING)
+    nivel_academico_docente = models.ForeignKey(Niveles_academicos_docentes, on_delete=models.DO_NOTHING)
+
+class Estudiantes(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE, null=True, blank=True)
+    cod_estudiante = models.CharField(max_length=10, unique=True)
     dni = models.IntegerField(primary_key=True)
     nombres = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200, null=True)
@@ -80,12 +105,7 @@ class Personas(models.Model):
     departamento = models.ForeignKey(Departamentos, on_delete=models.DO_NOTHING)
     ciudad = models.ForeignKey(Ciudades, on_delete=models.DO_NOTHING)
     grupo_sanguineo = models.ForeignKey(Grupos_sanguineos, on_delete=models.DO_NOTHING)
-
-class Estudiantes(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE, null=True, blank=True)
-    acudiente = models.ForeignKey(Personas, to_field='dni', on_delete=models.DO_NOTHING)
-    cod_estudiante = models.CharField(max_length=10, unique=True)
+    nivel_academico_docente = models.ForeignKey(Niveles_academicos_docentes, on_delete=models.DO_NOTHING)
 
 class Docentes(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    nivel_academico_docente = models.ForeignKey(Niveles_academicos_docentes, on_delete=models.DO_NOTHING)

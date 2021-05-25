@@ -4,9 +4,70 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
-from .forms import AsignaturaForm, SedeForm
+from .forms import AsignaturaForm, SedeForm, AreasAsignaturasForm
 
 # COORDINADOR VIEWS
+#ÁREAS
+def listar_areas(request):
+    lista_areas = []
+
+
+
+class listar_areas(ListView):
+    model = AreasAsignaturas
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        lista_areas = []
+        for sede in self.get_queryset():
+            data_area = {}
+            data_area['id'] = sede.id
+            data_area['area'] = sede.area
+            data_area['descripcion'] = sede.descripcion
+            lista_areas.append(data_area)
+        data = json.dumps(lista_areas)
+        return HttpResponse(data, 'application/json')
+
+def crud_areas(request):
+    context = {}
+    return render(request, 'coordinador/areas.html', context)
+
+class crear_area(CreateView):
+    model = AreasAsignaturas
+    form = AreasAsignaturasForm
+
+    def post(self, request, *args, **kwargs):
+        self.form = AreasAsignaturasForm(request.POST)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('done', 'application/json')
+        return HttpResponse('error', 'application/json')
+
+class editar_area(UpdateView):
+    model = AreasAsignaturas
+    form = AreasAsignaturasForm
+
+    def post(self, request, *args, **kwargs):
+        self.form = AreasAsignaturasForm(request.POST)
+        area = AreasAsignaturas.objects.get(id=request.POST['area_id'])
+        self.form = AreasAsignaturasForm(request.POST, instance=area)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('done', 'application/json')
+        return HttpResponse('error', 'application/json')
+
+class eliminar_areas(DeleteView):
+    model = AreasAsignaturas
+
+    def get_query(self, area_id):
+        return self.model.objects.get(id=area_id)
+
+    def post(self, request, *args, **kwargs):
+        area = self.get_query(request.POST['area_id'])
+        area.delete()
+        return HttpResponse('drop', 'application/json')
 
 #ASIGNATURAS
 def crud_asignaturas(request):

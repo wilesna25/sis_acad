@@ -4,9 +4,38 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
-from .forms import AsignaturaForm, SedeForm, AreasAsignaturasForm
+from .forms import AsignaturaForm, SedeForm, AreasAsignaturasForm, DocenteRegistroForm
 
 # COORDINADOR VIEWS
+
+#DOCENTES
+def listar_docentes(request):
+    response = HttpResponse()
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        response.write("hola mundo")
+   # return HttpResponse('test', 'application/json')
+
+def crud_docentes(request):
+    context = {'form':DocenteRegistroForm}
+    return render(request, 'coordinador/docentes.html', context)
+
+
+class registrar_docente(CreateView):
+    model = User
+    form = DocenteRegistroForm
+
+    def post(self, request, *args, **kwargs):
+        self.form = DocenteRegistroForm(request.POST)
+        print("POST !!!")
+        print(request.POST)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('done', 'application/json')
+        return HttpResponse('error', 'application/json')
+
+
 #ÁREAS
 def listar_areas(request):
     lista_areas = []
@@ -192,19 +221,6 @@ class eliminar_sedes(DeleteView):
 def crud_clases(request):
     context = {}
     return render(request, 'coordinador/clases.html', context)
-
-
-def crud_docentes(request):
-    context = {}
-    return render(request, 'coordinador/docentes.html', context)
-
-
-def list_docentes(request):
-    response = HttpResponse()
-    if request.method == 'GET':
-        pass
-    elif request.method == 'POST':
-        response.write("hola mundo")
 
 
 def crud_estudiantes(request):

@@ -84,6 +84,9 @@ class Docentes(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE, primary_key=True)
     dni = models.IntegerField(unique=True)
     direccion = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.dni
     #nombres = models.CharField(max_length=200, null=True)
     #apellidos = models.CharField(max_length=200, null=True)
   #  telefono  = models.IntegerField(null=True)

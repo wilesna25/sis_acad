@@ -32,6 +32,10 @@ class registrar_docente(CreateView):
         print(request.POST)
         if self.form.is_valid():
             self.form.save()
+        else:
+            err=self.form.errors
+            print ("err::::")
+            print(err)
             return HttpResponse('done', 'application/json')
         return HttpResponse('error', 'application/json')
 

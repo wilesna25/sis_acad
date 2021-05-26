@@ -52,7 +52,6 @@
               <form id="formDocentes">
                     <div class="modal-body">
                         <div class="row">
-                            <input  type="hidden" class="form-control" id="docente_id"/>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     Nombres
@@ -99,6 +98,7 @@
     <script type="text/javascript">
     $(document).ready( function () {
             var csrftoken = Cookies.get('csrftoken');
+            alert(csrftoken);
             tablaDocentes = $('#tablaDocentes').DataTable({
                     "responsive" : true,
                     "autoWidth" : false,
@@ -107,7 +107,7 @@
                         "method": 'POST',
                         "data":{'opcion':'opcidon'},
                         "dataSrc":"",
-                        "headers": {'X-CSRFToken': '{{ csrf_token }}'},
+                        "headers": {'X-CSRFToken': csrftoken},
                     },
                     "columns":[
                         {"data": "id"},
@@ -138,12 +138,15 @@
                       datatype:"json",
                       data:  {
                                 'docente_id' :docente_id,
+                                'username' :'docente',
+                                'password1' :'Holamundo123',
+                                'password2' :'Holamundo123',
                                 'first_name' :first_name,
                                 'last_name':last_name,
                                 'dni':dni,
                                 'direccion':direccion
                               },
-                      headers : {'X-CSRFToken': '{{ csrf_token }}'},
+                      headers : {'X-CSRFToken': csrftoken},
                       success: function(data) {
                        }
                     });

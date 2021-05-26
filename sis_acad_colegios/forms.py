@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
@@ -21,20 +22,25 @@ class AreasAsignaturasForm(ModelForm):
 
 
 class DocenteRegistroForm(UserCreationForm):
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    dni = forms.IntegerField(required=True)
+    direccion = forms.CharField(required=True)
 
     class Meta(UserCreationForm.Meta):
         model = User
 
     @transaction.atomic
     def save(self):
-        print("a guardar")
         user = super().save(commit=False)
-        user.first_name = self.cleaned_data('first_name')
-        user.last_name = self.cleaned_data('last_name')
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        user.username = 'docente'
+        user.password1 = 'Holamundo123'
+        user.password1 = 'Holamundo123'
         user.save()
-        print("creadooooo")
-        docente = Docentes.objects.create(user=user)
-        docente.dni = self.cleaned_data('dni')
-        docente.direccion = self.cleaned_data('direccion')
+        docente = Docentes.objects.create(user=user,dni='')
+        docente.dni = self.cleaned_data.get('dni')
+        docente.direccion = self.cleaned_data.get('direccion')
         docente.save()
         return user

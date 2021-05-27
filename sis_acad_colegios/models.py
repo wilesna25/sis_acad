@@ -82,7 +82,7 @@ class Estudiantes(models.Model):
 
 class Docentes(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE, primary_key=True)
-    dni = models.IntegerField(unique=True)
+    dni = models.IntegerField(unique=True, null=True)
     direccion = models.CharField(max_length=200, null=True)
 
     def __str__(self):

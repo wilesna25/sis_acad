@@ -28,10 +28,12 @@
             <table id="tablaDocentes" class="table table-striped table-bordered table-condensed" style="width:100%">
                 <thead class="text-center">
                     <tr>
+                        <th>ID</th>
                         <th>DNI</th>
                         <th>Nombres</th>
                         <th>Apellidos</th>
                         <th>Dirección</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,29 +57,35 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     Nombres
+                                    <input  type="text" class="form-control" id="first_name"/>
                                 </div>
-                            <input  type="text" class="form-control" id="first_name"/>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     Apellidos
+                                    <input  type="text" class="form-control" id="last_name"/>
                                 </div>
                             </div>
-                            <input  type="text" class="form-control" id="last_name"/>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     DNI
+                                    <input  type="text" class="form-control" id="dni"/>
                                 </div>
-                            <input  type="text" class="form-control" id="dni"/>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     Dirección
+                                    <input  type="text" class="form-control" id="direccion"/>
                                 </div>
                             </div>
-                            <input  type="text" class="form-control" id="direccion"/>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    Email
+                                    <input  type="text" class="form-control" id="username"/>
+                                </div>
+                            </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
                                 <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
@@ -111,9 +119,9 @@
                     },
                     "columns":[
                         {"data": "id"},
+                        {"data": "dni"},
                         {"data": "first_name"},
                         {"data": "last_name"},
-                        {"data": "dni"},
                         {"data": "direccion"},
                         {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
                     ]
@@ -132,6 +140,7 @@
                 last_name = $.trim($('#last_name').val());
                 dni = parseInt($.trim($('#dni').val()));
                 direccion = $.trim($('#direccion').val());
+                username = $.trim($('#username').val());
                     $.ajax({
                       url: url,
                       type: "POST",
@@ -144,7 +153,8 @@
                                 'first_name' :first_name,
                                 'last_name':last_name,
                                 'dni':dni,
-                                'direccion':direccion
+                                'direccion':direccion,
+                                'username':username
                               },
                       headers : {'X-CSRFToken': csrftoken},
                       success: function(data) {

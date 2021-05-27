@@ -15,6 +15,12 @@ urlpatterns = [
     path('coordinador/sedes/editar_sedes/', views.editar_sedes.as_view(), name="editar_sedes"),
     path('coordinador/sedes/eliminar_sedes/', views.eliminar_sedes.as_view(),
          name="eliminar_sedes"),
+    #Docentes
+    path('coordinador/docentes/', views.crud_docentes, name="crud_docentes"),
+    path('coordinador/docentes/listar_docentes/', views.listar_docentes.as_view(), name="listar_docentes"),
+    path('coordinador/docentes/registrar_docente/', views.registrar_docente.as_view(), name="registrar_docente"),
+    #Matrículas
+    path('coordinador/matriculas/', views.crud_matriculas, name="crud_matriculas"),
     #Áreas asignaturas
     path('coordinador/areas/', views.crud_areas, name="crud_areas"),
     path('coordinador/areas/listar_areas/', views.listar_areas.as_view(), name="listar_areas"),
@@ -22,13 +28,6 @@ urlpatterns = [
     path('coordinador/areas/editar_area/', views.editar_area.as_view(), name="editar_area"),
     path('coordinador/areas/eliminar_area/', views.eliminar_areas.as_view(), name="eliminar_areas"),
     path('coordinador/grupos/', views.crud_grupos, name="crud_grupos"),
-    #Docentes
-    path('coordinador/docentes/', views.crud_docentes, name="crud_docentes"),
-    path('coordinador/docentes/listar_docentes/', views.listar_docentes, name="listar_docentes"),
-    path('coordinador/docentes/registrar_docente/', views.registrar_docente.as_view(), name="registrar_docente"),
-
-    #Matrículas
-    path('coordinador/matriculas/', views.crud_matriculas, name="crud_matriculas"),
     #Asignaturas
     path('coordinador/asignaturas/', views.crud_asignaturas, name="crud_asignaturas"),
     path('coordinador/asignaturas/listar_asignaturas/', views.listar_asignaturas.as_view(), name="listar_asignaturas"),

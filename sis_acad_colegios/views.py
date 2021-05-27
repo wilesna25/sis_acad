@@ -9,13 +9,33 @@ from .forms import AsignaturaForm, SedeForm, AreasAsignaturasForm, DocenteRegist
 # COORDINADOR VIEWS
 
 #DOCENTES
-def listar_docentes(request):
-    response = HttpResponse()
-    if request.method == 'GET':
-        pass
-    elif request.method == 'POST':
-        response.write("hola mundo")
-   # return HttpResponse('test', 'application/json')
+class listar_docentes(ListView):
+    model = Docentes
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        lista_docentes = []
+        for docente in self.get_queryset():
+            data_docente = {}
+            print("Docente !!!!")
+            print(type(docente))
+            attrs = vars(docente)
+            print("Atritubos docente :::::::")
+            print(', '.join("%s: %s" % item for item in attrs.items()))
+            print("Fin atributos.::::::::::::..")
+            user = User.objects.get(id=docente.user_id)
+            print("USERRRRRR :::")
+            print(user)
+            data_docente['id'] = user.id
+            data_docente['first_name'] = user.first_name
+            data_docente['last_name'] = user.last_name
+            data_docente['dni'] = docente.dni
+            data_docente['direccion'] = docente.direccion
+            lista_docentes.append(data_docente)
+        data = json.dumps(lista_docentes)
+        return HttpResponse(data, 'application/json')
 
 def crud_docentes(request):
     context = {'form':DocenteRegistroForm}
@@ -28,24 +48,17 @@ class registrar_docente(CreateView):
 
     def post(self, request, *args, **kwargs):
         self.form = DocenteRegistroForm(request.POST)
-        print("POST !!!")
         print(request.POST)
         if self.form.is_valid():
             self.form.save()
+            return HttpResponse('docente creado', 'application/json')
         else:
             err=self.form.errors
-            print ("err::::")
             print(err)
-            return HttpResponse('done', 'application/json')
-        return HttpResponse('error', 'application/json')
+            return HttpResponse('error: '+err, 'application/json')
 
 
 #ÁREAS
-def listar_areas(request):
-    lista_areas = []
-
-
-
 class listar_areas(ListView):
     model = AreasAsignaturas
 

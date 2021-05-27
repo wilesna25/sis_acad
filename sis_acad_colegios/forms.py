@@ -26,6 +26,7 @@ class DocenteRegistroForm(UserCreationForm):
     last_name = forms.CharField(required=True)
     dni = forms.IntegerField(required=True)
     direccion = forms.CharField(required=True)
+    username = forms.CharField(required=True)
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -35,11 +36,12 @@ class DocenteRegistroForm(UserCreationForm):
         user = super().save(commit=False)
         user.first_name = self.cleaned_data.get('first_name')
         user.last_name = self.cleaned_data.get('last_name')
-        user.username = 'docente'
+        user.username = self.cleaned_data.get('username')
         user.password1 = 'Holamundo123'
         user.password1 = 'Holamundo123'
         user.save()
-        docente = Docentes.objects.create(user=user,dni='')
+        docente = Docentes.objects.create(user=user)
+        print("dniiiiiiiiiiiiiiii")
         docente.dni = self.cleaned_data.get('dni')
         docente.direccion = self.cleaned_data.get('direccion')
         docente.save()

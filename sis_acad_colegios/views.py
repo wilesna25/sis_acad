@@ -31,6 +31,7 @@ class listar_docentes(ListView):
             data_docente['id'] = user.id
             data_docente['first_name'] = user.first_name
             data_docente['last_name'] = user.last_name
+            data_docente['username'] = user.username
             data_docente['dni'] = docente.dni
             data_docente['direccion'] = docente.direccion
             lista_docentes.append(data_docente)

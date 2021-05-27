@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .models import *
 
 class AsignaturaForm(ModelForm):
+
     class Meta:
         model = Asignaturas
         fields = '__all__'
@@ -39,9 +40,9 @@ class DocenteRegistroForm(UserCreationForm):
         user.username = self.cleaned_data.get('username')
         user.password1 = 'Holamundo123'
         user.password1 = 'Holamundo123'
+        user.is_teacher = True
         user.save()
         docente = Docentes.objects.create(user=user)
-        print("dniiiiiiiiiiiiiiii")
         docente.dni = self.cleaned_data.get('dni')
         docente.direccion = self.cleaned_data.get('direccion')
         docente.save()

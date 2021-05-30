@@ -38,7 +38,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalGrupos"></h5>
+                    <h5 class="modal-title" id="modalPeriodos"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -49,7 +49,7 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="" class="col-form-label">
-                                        Asignatura
+                                        Periodo
                                     </label>
                                     <input  type="text" class="form-control" id="asignatura"/>
                                 </div>
@@ -59,7 +59,17 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="" class="col-form-label">
-                                        Descripción
+                                        Fecha Inicio
+                                    </label>
+                                    <input  type="text" class="form-control" id="descripcion"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">
+                                        Fecha Fin
                                     </label>
                                     <input  type="text" class="form-control" id="descripcion"/>
                                 </div>
@@ -135,10 +145,7 @@
                 user_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
                 username = fila.find('td:eq(1)').text();
                 first_name = fila.find('td:eq(2)').text();
-                last_name = fila.find('td:eq(3)').text();
-                gender = fila.find('td:eq(4)').text();
-                password = fila.find('td:eq(5)').text();
-                status = fila.find('td:eq(6)').text();
+
                 $("#username").val(username);
                 $("#first_name").val(first_name);
                 $("#last_name").val(last_name);

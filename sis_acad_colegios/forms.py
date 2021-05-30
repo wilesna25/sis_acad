@@ -5,8 +5,13 @@ from django.db import transaction
 from django.contrib.auth.models import User
 from .models import *
 
-class AsignaturaForm(ModelForm):
 
+class ClasesForm(ModelForm):
+    class Meta:
+        model = Clases
+        fields = '__all__'
+
+class AsignaturaForm(ModelForm):
     class Meta:
         model = Asignaturas
         fields = '__all__'
@@ -15,6 +20,13 @@ class SedeForm(ModelForm):
     class Meta:
         model = Sedes
         fields = '__all__'
+
+
+class GruposForm(ModelForm):
+    class Meta:
+        model = Grupos
+        fields = '__all__'
+
 
 class AreasAsignaturasForm(ModelForm):
     class Meta:

@@ -20,6 +20,7 @@
                 <table id="tablaGrupos" class="table table-striped table-bordered table-condensed" style="width:100%">
                     <thead class="text-center">
                         <tr>
+                            <th>GRUPO ID</th>
                             <th>GRUPO NOMBRE</th>
                             <th>GRADO</th>
                             <th>DOCENTE</th>
@@ -35,7 +36,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog" aria-labelledby="modalDocentes" arial-hiddden="true">
+    <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog" aria-labelledby="modalGrupos" arial-hiddden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,14 +46,15 @@
                     </button>
                 </div>
                 <form id="formGrupos">
+                    <input  type="text" class="form-control" id="grupo_id"/>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="" class="col-form-label">
-                                        Asignatura
+                                        Grupo
                                     </label>
-                                    <input  type="text" class="form-control" id="asignatura"/>
+                                    <input  type="text" class="form-control" id="grupo"/>
                                 </div>
                             </div>
                         </div>
@@ -60,9 +62,54 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="" class="col-form-label">
-                                        Descripción
+                                        Grado
                                     </label>
-                                    <input  type="text" class="form-control" id="descripcion"/>
+                                    <select class="form-control" id="grado" name='selected_area'>
+                                        {% for grado in grados %}
+                                            <option value='{{grado.id}}'>{{ grado.grado }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">
+                                        Docente
+                                    </label>
+                                    <select class="form-control" id="docente" name='selected_area'>
+                                        {% for docente in docentes %}
+                                            <option value='{{docente.user.id}}'>{{ docente.user.first_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">
+                                        Jornada
+                                    </label>
+                                    <select class="form-control" id="jornada" name='selected_area'>
+                                        {% for jornada in jornadas %}
+                                            <option value='{{jornada.id}}'>{{ jornada.jornada }}</option>
+                                        {% endfor %} </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">
+                                        Sedes
+                                    </label>
+                                    <select class="form-control" id="sede" name='selected_area'>
+                                        {% for sede in sedes %}
+                                            <option value='{{sede.id}}'>{{ sede.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -83,36 +130,57 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 
     <script type="text/javascript">
-       $(document).ready( function () {
-            tablaClases = $('#tablaClases').DataTable({
-                    responsive : true,
-                    autoWidth : false
-                    "ajax":{
-                        "url": "coordinado/docentes/ver_asignaturas/",
+      $(document).ready( function () {
+            var csrftoken = Cookies.get('csrftoken');
+            tablaGrupos = $('#tablaGrupos').DataTable({
+                    "responsive" : true,
+                    "autoWidth" : false,
+                    ajax:{
+                        "url": "listar_grupos/",
                         "method": 'POST',
-                        "data":{'opcion':'opcion'},
-                        "dataSrc":""
+                        "data":{'opcion':'opcidon'},
+                        "dataSrc":"",
+                        "headers": {'X-CSRFToken': '{{ csrf_token }}'},
                     },
                     "columns":[
-                        {"data": "asignatura"},
-                        {"data": "descripcion"},
+                        {"data": "id"},
+                        {"data": "grupo"},
+                        {"data": "grado"},
+                        {"data": "docente"},
+                        {"data": "jornada"},
+                        {"data": "sede"},
                         {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
                     ]
             });
-
-            var fila; //captura la fila, para editar o eliminar
-            //submit para el Alta y Actualización
-            $('#formAsignaturas').submit(function(e){
+            var fila; //captura la fila, para editar o eliminar/
+            $('#formGrupos').submit(function(e){
                 e.preventDefault();
-                asignatura = $.trim($('#asignatura').val());
-                descripcion = $.trim($('#descripcion').val());
+                url='';
+                if(opcion===1){
+                    url = 'crear_grupos/';
+                }else{
+                    url = 'editar_grupos/';
+                }
+                grupo_id = $.trim($('#grupo_id').val());
+                grupo = $.trim($('#grupo').val());
+                grado = $.trim($('#grado').val());
+                docente = $.trim($('#docente').val());
+                jornada = $.trim($('#jornada').val());
+                sede = $.trim($('#sede').val());
                     $.ajax({
-                      url: "bd/crud.php",
+                      url: url,
                       type: "POST",
                       datatype:"json",
-                      data:  { asignatura:asignatura, descripcion:descripcion },
+                      data:  {
+                                'grupo_id' : grupo_id,
+                                'grupo' : grupo,
+                                'grado': grado,
+                                'docente': docente,
+                                'jornada': jornada,
+                                'sede': sede
+                             },
+                      headers : {'X-CSRFToken': '{{ csrf_token }}'},
                       success: function(data) {
-                        tablaDocentes.ajax.reload(null, false);
                        }
                     });
                 $('#modalCRUD').modal('hide');
@@ -133,39 +201,40 @@
             $(document).on("click", ".btnEditar", function(){
                 opcion = 2;//editar
                 fila = $(this).closest("tr");
-                user_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
-                username = fila.find('td:eq(1)').text();
-                first_name = fila.find('td:eq(2)').text();
-                last_name = fila.find('td:eq(3)').text();
-                gender = fila.find('td:eq(4)').text();
-                password = fila.find('td:eq(5)').text();
-                status = fila.find('td:eq(6)').text();
-                $("#username").val(username);
-                $("#first_name").val(first_name);
-                $("#last_name").val(last_name);
-                $("#gender").val(gender);
-                $("#password").val(password);
-                $("#status").val(status);
+                console.log("-----:..---");
+                console.log(fila.find('td:eq(1)').text());
+                asignatura_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
+                asinatura_nombre = fila.find('td:eq(1)').text();
+                descripcion = fila.find('td:eq(2)').text();
+                $("#asignatura").val(asinatura_nombre);
+                $("#descripcion").val(descripcion);
+                $("#asignatura_id").val(asignatura_id);
                 $(".modal-header").css("background-color", "#007bff");
                 $(".modal-header").css("color", "white" );
-                $(".modal-title").text("Editar Usuario");
+                $(".modal-title").text("Editar Asignatura");
                 $('#modalCRUD').modal('show');
             });
 
             //Borrar
             $(document).on("click", ".btnBorrar", function(){
-                fila = $(this);
-                user_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
-                opcion = 3; //eliminar
-                var respuesta = confirm("¿Está seguro de borrar el registro "+user_id+"?");
+                console.log("test");
+                fila = $(this).closest("tr");
+                asignatura_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
+                asignatura_nombre = fila.find('td:eq(1)').text();
+                console.log("id:::");
+                console.log(asignatura_id);
+                var respuesta = confirm("¿Está seguro de borrar el registro "+asignatura_nombre+"?");
                 if (respuesta) {
                     $.ajax({
-                      url: "bd/crud.php",
+                      url: "eliminar_asignatura/",
                       type: "POST",
                       datatype:"json",
-                      data:  {opcion:opcion, user_id:user_id},
+                      data:  {"asignatura_id":asignatura_id},
+                      headers : {'X-CSRFToken': '{{ csrf_token }}'},
                       success: function() {
-                          tablaUsuarios.row(fila.parents('tr')).remove().draw();
+                          tablaAsignaturas.row(fila.parents('tr')).remove().draw();
+                          $('#tablaAsignaturas').draw();
+                          tablaAsignaturas.ajax.reload();
                        }
                     });
                 }

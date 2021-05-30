@@ -23,14 +23,13 @@
                             <th>id</th>
                             <th>Asignatura</th>
                             <th>Descripción</th>
+                            <th>Área</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Cienciales Sociales</td>
-                            <td>Detalle de prueba de Sociales</td>
-                            <td><div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div></td>
+
                         </tr>
                     </tbody>
                 </table>
@@ -38,11 +37,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog" aria-labelledby="modalDocentes" arial-hidden="true">
+    <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog" aria-labelledby="modalAsignaturas" arial-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDocentes"></h5>
+                    <h5 class="modal-title" id="modalAsignaturas"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -67,6 +66,20 @@
                                         Descripción
                                     </label>
                                     <input  type="text" class="form-control" id="descripcion"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">
+                                        Área
+                                    </label>
+                                    <select class="form-control" id="area" name='selected_area'>
+                                        {% for area in areas %}
+                                            <option value='{{area.id}}'>{{ area.area }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -103,6 +116,7 @@
                         {"data": "id"},
                         {"data": "asignatura"},
                         {"data": "descripcion"},
+                        {"data": "area"},
                         {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
                     ]
             });
@@ -117,6 +131,7 @@
                 }
                 asignatura = $.trim($('#asignatura').val());
                 descripcion = $.trim($('#descripcion').val());
+                area = $.trim($('#area').val());
                     $.ajax({
                       url: url,
                       type: "POST",
@@ -124,7 +139,8 @@
                       data:  {
                                 'asignatura_id' :$('#asignatura_id').val(),
                                 'asignatura':asignatura,
-                                'descripcion':descripcion
+                                'descripcion':descripcion,
+                                'area':area
                               },
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
                       success: function(data) {

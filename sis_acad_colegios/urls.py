@@ -22,6 +22,8 @@ urlpatterns = [
     path('coordinador/docentes/registrar_docente/', views.registrar_docente.as_view(), name="registrar_docente"),
     #Matrículas
     path('coordinador/matriculas/', views.crud_matriculas, name="crud_matriculas"),
+    path('coordinador/matriculas/listar_matriculas/', views.listar_matriculas.as_view(), name="listar_matriculas"),
+    path('coordinador/matriculas/crear_matriculas/', views.crear_matriculas.as_view(), name="crear_matriculas"),
     #Áreas asignaturas
     path('coordinador/areas/', views.crud_areas, name="crud_areas"),
     path('coordinador/areas/listar_areas/', views.listar_areas.as_view(), name="listar_areas"),

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
+from datetime import date
 # Create your models here.
 
 
@@ -26,6 +27,49 @@ class PeriodoAcademico(models.Model):
 
     def __str__(self):
         return self.periodo
+
+
+class Eps(models.Model):
+    nombre = models.CharField(max_length=200)
+    descripcion = models.CharField(max_length=200, null=True)
+
+class Departamentos(models.Model):
+    departamento = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.departamento
+
+class Ciudades(models.Model):
+    ciudad = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.ciudad
+
+
+class Tipos_documentos(models.Model):
+    tipo_documento = models.CharField(max_length=200)
+
+
+class Estratos_sociales(models.Model):
+    estrato_social = models.CharField(max_length=200)
+
+
+class Grupos_sanguineos(models.Model):
+    grupo_sanguineo = models.CharField(max_length=200)
+
+
+class Tipos_poblaciones(models.Model):
+    tipo_poblacion = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.tipo_poblacion
+
+
+class Niveles_academicos_docentes(models.Model):
+    nivel_academico = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.nivel_academico
 
 
 class AreasAsignaturas(models.Model):
@@ -100,63 +144,26 @@ class Clases(models.Model):
         return self.clase
 
 
-class Eps(models.Model):
-    nombre = models.CharField(max_length=200)
-    descripcion = models.CharField(max_length=200, null=True)
-
-class Departamentos(models.Model):
-    departamento = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.departamento
-
-class Ciudades(models.Model):
-    ciudad = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.ciudad
-
-
-class Tipos_documentos(models.Model):
-    tipo_documento = models.CharField(max_length=200)
-
-
-class Estratos_sociales(models.Model):
-    estrato_social = models.CharField(max_length=200)
-
-
-class Grupos_sanguineos(models.Model):
-    grupo_sanguineo = models.CharField(max_length=200)
-
-
-class Tipos_poblaciones(models.Model):
-    tipo_poblacion = models.CharField(max_length=200, null=True)
-
-    def __str__(self):
-        return self.tipo_poblacion
-
-
-class Niveles_academicos_docentes(models.Model):
-    nivel_academico = models.CharField(max_length=200, null=True)
-
-    def __str__(self):
-        return self.nivel_academico
-
-
 class Estudiantes(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE, primary_key=True)
     cod_estudiante = models.CharField(max_length=10, unique=True)
     dni = models.IntegerField(unique=True, null=False, default='1')
-   # nombres = models.CharField(max_length=200, null=True)
-   # apellidos = models.CharField(max_length=200, null=True)
-    #direccion = models.CharField(max_length=200, null=True)
-   # telefono  = models.IntegerField(null=True)
-   # correo  = models.CharField(max_length=200, null=True)
-    #fecha_nacimiento = models.DateField(null=True)
-   # eps = models.ForeignKey(Eps, on_delete=models.DO_NOTHING, null=True)
+    nombres = models.CharField(max_length=200, null=True)
+    apellidos = models.CharField(max_length=200, null=True)
+    direccion = models.CharField(max_length=200, null=True)
+    telefono  = models.IntegerField(null=True)
+    correo  = models.CharField(max_length=200, null=True)
+    fecha_nacimiento = models.DateField(null=True)
+   # nombres_acudiente = models.CharField(max_length=200, null=True)
+   # telefonos_acudiente = models.IntegerField()
+    #direccion_acudiente = models.CharField(max_length=200, null=True)
+    #eps = models.ForeignKey(Eps, on_delete=models.DO_NOTHING, null=True)
    # departamento = models.ForeignKey(Departamentos, on_delete=models.DO_NOTHING, null=True)
-   # ciudad = models.ForeignKey(Ciudades, on_delete=models.CASCADE, null=True)
+    #ciudad = models.ForeignKey(Ciudades, on_delete=models.CASCADE, null=True)
    # grupo_sanguineo = models.ForeignKey(Grupos_sanguineos, on_delete=models.DO_NOTHING, null=True)
   #  nivel_academico_docente no= models.ForeignKey(Niveles_academicos_docentes, on_delete=models.DO_NOTHING, null=True)
    # tipo_poblacion = models.ForeignKey(Tipos_poblaciones, on_delete=models.DO_NOTHING)
 
+class Matriculas(models.Model):
+    estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    grupo = models.ForeignKey(Grupos, on_delete=models.DO_NOTHING, null=True)
+    fecha = models.DateField(default=date.today)

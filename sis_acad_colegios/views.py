@@ -322,7 +322,6 @@ class listar_clases(ListView):
 
     def post(self, request, *args, **kwargs):
         lista_clases = []
-        print("AQUIIII")
         for clase in self.get_queryset():
             data_asignatura = {}
             data_asignatura['id'] = clase.id
@@ -341,8 +340,6 @@ class crear_clases(CreateView):
 
     def post(self, request, *args, **kwargs):
         self.form = ClasesForm(request.POST)
-        print("!!!!!!!!!!!!!!!!!!!!!")
-        print(request.POST)
         if self.form.is_valid():
             self.form.save()
             return HttpResponse('done', 'application/json')
@@ -409,11 +406,54 @@ class crear_grupos(CreateView):
             return HttpResponse(err, 'application/json')
 
 
+
+#Matrículas
 def crud_matriculas(request):
-    context = {}
+    grupos = Grupos.objects.all()
+    context = {
+               'form':MatricularEstudianteForm,
+               'grupos':grupos,
+            }
     return render(request, 'coordinador/matriculas.html', context)
 
+class listar_matriculas(ListView):
+    model = Estudiantes
 
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        lista_matriculas = []
+        for estudiante in self.get_queryset():
+            data_matricula = {}
+            data_matricula['id'] = estudiante.id
+            data_matricula['codigo_estudiante'] = estudiante.cod_estudiante
+            data_matricula['nid'] = estudiante.dni
+            data_matricula['nombres'] = estudiante.nombres
+            data_matricula['apellidos'] = estudiante.apellidos
+            data_matricula['fecha_nacimiento'] = estudiante.fecha_nacimiento.__str__()
+            data_matricula['direccion'] = estudiante.direccion
+            data_matricula['telefono'] = estudiante.telefono
+            data_matricula['correo'] = estudiante.correo
+            data_matricula['grupo'] = Matriculas.objects.get(estudiante=estudiante).grupo.grupo
+            lista_matriculas.append(data_matricula)
+        data = json.dumps(lista_matriculas)
+        return HttpResponse(data, 'application/json')
+
+class crear_matriculas(CreateView):
+    model = Estudiantes
+    form = MatricularEstudianteForm
+
+    def post(self, request, *args, **kwargs):
+        self.form = MatricularEstudianteForm(request.POST)
+        print(request.POST)
+        if self.form.is_valid():
+            self.form.save()
+            return HttpResponse('estudiante creado', 'application/json')
+        else:
+            err=self.form.errors
+            print(err)
+            return HttpResponse(err, 'application/json')
 
 
 #

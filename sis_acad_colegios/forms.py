@@ -59,3 +59,31 @@ class DocenteRegistroForm(UserCreationForm):
         docente.direccion = self.cleaned_data.get('direccion')
         docente.save()
         return user
+
+
+class MatricularEstudianteForm(ModelForm):
+
+    grupo = forms.IntegerField(required=True)
+
+    class Meta:
+        model = Estudiantes
+        fields = '__all__'
+
+    @transaction.atomic
+    def save(self):
+        #crea estudiante
+        estudiante = Estudiantes.objects.create()
+        estudiante.cod_estudiante = self.cleaned_data.get('cod_estudiante')
+        estudiante.dni = self.cleaned_data.get('dni')
+        estudiante.nombres = self.cleaned_data.get('nombres')
+        estudiante.apellidos = self.cleaned_data.get('apellidos')
+        estudiante.fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+        estudiante.direccion = self.cleaned_data.get('direccion')
+        estudiante.telefono = self.cleaned_data.get('telefono')
+        estudiante.correo = self.cleaned_data.get('correo')
+        estudiante.save()
+        #crea matrícula
+        matricula = Matriculas.objects.create(estudiante=estudiante)
+        matricula.grupo = Grupos.objects.get(id=self.cleaned_data.get('grupo'))
+        matricula.save()
+        return estudiante

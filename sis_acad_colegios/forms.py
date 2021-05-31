@@ -86,4 +86,7 @@ class MatricularEstudianteForm(ModelForm):
         matricula = Matriculas.objects.create(estudiante=estudiante)
         matricula.grupo = Grupos.objects.get(id=self.cleaned_data.get('grupo'))
         matricula.save()
+        #crear Estudiante_por_Grupo
+        est_x_grupo = Estudiantes_por_Grupo.objects.create(estudiante=estudiante, grupo=matricula.grupo)
+        est_x_grupo.save()
         return estudiante

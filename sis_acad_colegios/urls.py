@@ -55,10 +55,13 @@ urlpatterns = [
     path('coordinador/asignaturas/editar_periodos_academicos/', views.editar_periodos_academicos.as_view(), name="editar_periodos_academicos"),
     path('coordinador/asignaturas/eliminar_periodos_academicos/', views.eliminar_periodos_academicos.as_view(), name="eliminar_periodos_academicos"),
 
-
-
+    #------------------------------------------------------------------------------------------------------------------------------
     #DOCENTE PATHS
+    #------------------------------------------------------------------------------------------------------------------------------
+    #ASISTENCIA
     path('docente/asistencia/', views.crud_asistencia, name="crud_asistencia"),
+    path('coordinador/asignaturas/listar_asistencias_estudiantes', views.listar_asistencias_estudiantes.as_view(), name="listar_asistencias_estudiantes"),
+    #CALIFICACIONES
     path('docente/calificaciones/', views.crud_calificaciones, name="crud_calificaciones"),
 
     #ESTUDIANTE PATHS

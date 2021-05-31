@@ -460,11 +460,33 @@ class crear_matriculas(CreateView):
 #DOCENTES VIEWS
 #
 
+#ASISTENCIAS
 def crud_asistencia(request):
-    context = {}
+    context = {
+        'grupos' : Grupos.objects.all()
+    }
     return render(request, 'docente/asistencia.html', context)
 
+class listar_asistencias_estudiantes(ListView):
+    model = Estudiantes
 
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        lista_estudiantes = []
+        for clase in self.get_queryset():
+            data_estudiante = {}
+            data_estudiante['id'] = clase.id
+            data_estudiante['clase'] = clase.clase
+            data_estudiante['grupo'] = clase.grupo.grupo
+            data_estudiante['asignatura'] = clase.asignatura.asignatura
+            data_estudiante['docente'] = clase.docente.user.id
+            lista_estudiantes.append(data_estudiante)
+        data = json.dumps(lista_estudiantes)
+        return HttpResponse(data, 'application/json')
+
+#CALIFICACIONES
 def crud_calificaciones(request):
     context = {}
     return render(request, 'docente/calificaciones.html', context)

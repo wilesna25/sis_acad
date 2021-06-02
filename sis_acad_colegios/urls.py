@@ -62,14 +62,23 @@ urlpatterns = [
     #------------------------------------------------------------------------------------------------------------------------------
     #DOCENTE PATHS
     #------------------------------------------------------------------------------------------------------------------------------
+    path('docente/boletin/', views.ver_boletin, name="ver_boletin"),
     #ASISTENCIA
     path('docente/asistencias/', views.crud_asistencia, name="crud_asistencia"),
+    path('docente/ver_asistencias/', views.ver_asistencias, name="ver_asistencias"),
+    path('docente/ver_asistencias/listar_fallas_asistencia_por_clase/', views.listar_fallas_asistencia_por_clase, name="listar_fallas_asistencia_por_clase"),
+    path('docente/asistencias/guardar_falla_asistencia/', views.guardar_falla_asistencia,
+         name="guardar_falla_asistencia"),
+
+    # CALIFICACIONES
+    path('docente/calificaciones/', views.crud_calificaciones, name="crud_calificaciones"),
+    path('docente/ver_calificaciones/', views.ver_calificaciones, name="ver_calificaciones"),
+
     #GestionEstudiantes
     path('docente/asistencias/listar_estudiantes_x_clase/', views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
 
     path('coordinador/asignaturas/listar_asistencias_estudiantes', views.listar_asistencias_estudiantes.as_view(), name="listar_asistencias_estudiantes"),
-    #CALIFICACIONES
-    path('docente/calificaciones/', views.crud_calificaciones, name="crud_calificaciones"),
+
 
     #ESTUDIANTE PATHS
     path('estudiante/', views.ver_calificaciones_estudiante, name="ver_calificaciones_estudiante")

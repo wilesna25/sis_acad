@@ -29,10 +29,6 @@ class PeriodoAcademico(models.Model):
         return self.periodo
 
 
-class Eps(models.Model):
-    nombre = models.CharField(max_length=200)
-    descripcion = models.CharField(max_length=200, null=True)
-
 class Departamentos(models.Model):
     departamento = models.CharField(max_length=200)
 
@@ -46,30 +42,11 @@ class Ciudades(models.Model):
         return self.ciudad
 
 
-class Tipos_documentos(models.Model):
-    tipo_documento = models.CharField(max_length=200)
-
-
-class Estratos_sociales(models.Model):
-    estrato_social = models.CharField(max_length=200)
-
-
-class Grupos_sanguineos(models.Model):
-    grupo_sanguineo = models.CharField(max_length=200)
-
-
-class Tipos_poblaciones(models.Model):
-    tipo_poblacion = models.CharField(max_length=200, null=True)
-
-    def __str__(self):
-        return self.tipo_poblacion
-
-
-class Niveles_academicos_docentes(models.Model):
-    nivel_academico = models.CharField(max_length=200, null=True)
-
-    def __str__(self):
-        return self.nivel_academico
+#class Niveles_academicos_docentes(models.Model):
+  #  nivel_academico = models.CharField(max_length=200, null=True)
+#
+   # def __str__(self):
+   #     return self.nivel_academico
 
 
 class AreasAsignaturas(models.Model):
@@ -117,10 +94,8 @@ class Docentes(models.Model):
   #  telefono  = models.IntegerField(null=True)
    # correo  = models.CharField(max_length=200, null=True)
    # fecha_nacimiento = models.DateField(null=True)
-   # eps = models.ForeignKey(Eps, on_delete=models.DO_NOTHING)
    # departamento = models.ForeignKey(Departamentos, on_delete=models.DO_NOTHING)
    # ciudad = models.ForeignKey(Ciudades, on_delete=models.DO_NOTHING)
-   # grupo_sanguineo = models.ForeignKey(Grupos_sanguineos, on_delete=models.DO_NOTHING)
    # nivel_academico_docente = models.ForeignKey(Niveles_academicos_docentes, on_delete=models.DO_NOTHING)
 
 
@@ -177,7 +152,6 @@ class Estudiantes_por_Grupo(models.Model):
 class FallasAsistencias(models.Model):
     estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
     clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
-    grupo = models.ForeignKey(Grupos, on_delete=models.DO_NOTHING, null=True)
     justificada = models.BooleanField(default=False)
     observaciones = models.CharField(max_length=500, null=True)
     fecha = models.DateField(default=date.today)

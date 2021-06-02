@@ -5,15 +5,9 @@ from django.contrib import admin
 from .models import *
 
 admin.site.register(User)
-admin.site.register(Eps)
 admin.site.register(Departamentos)
 admin.site.register(Grupos)
 admin.site.register(Ciudades)
-admin.site.register(Tipos_documentos)
-admin.site.register(Estratos_sociales)
-admin.site.register(Grupos_sanguineos)
-admin.site.register(Tipos_poblaciones)
-admin.site.register(Niveles_academicos_docentes)
 admin.site.register(Asignaturas)
 admin.site.register(Jornadas)
 admin.site.register(Estudiantes)

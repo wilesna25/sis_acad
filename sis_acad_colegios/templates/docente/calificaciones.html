@@ -6,7 +6,7 @@
         <h3 class="text-center">Calificaciones</h3>
     </header>
     <div class="container">
-        <div class="row">
+ <!--       <div class="row">
                 <div class="col-lg-4">
                     <div class="form-outline">
                         <label for="" class="col-form-label">
@@ -40,8 +40,27 @@
                         <button type="submit">Listar</button>
                     </div>
                 </div>
+    </div>-->
+    <div class="row">
+            <div class="col-lg-4">
+                <div class="form-outline">
+                    <label for="" class="col-form-label">
+                        Seleccione Clase
+                    </label>
+                    <select class="form-control" id="clases" name='selected_clase'>
+                        <option value="">Seleccione Clases</option>
+                        {% for clase in clases %}
+                            <option value='{{clase.id}}'>{{ clase.clase }} - {{ clase.grupo.grupo }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-outline">
+                    <button type="submit" id="btnListarEstudiantes">Listar</button>
+                </div>
+            </div>
     </div>
-
     <div class="container asistencias">
         <div class="row">
             <div class="col-lg-12">
@@ -123,12 +142,11 @@
     <script type="text/javascript">
        $(document).ready( function () {
             var csrftoken = Cookies.get('csrftoken');
-            alert("Hola");
             tablaAsistencias = $('#tablaAsistencias').DataTable({
                     "responsive" : true,
                     "autoWidth" : false,
                     ajax:{
-                        "url": "listar_estudiantes_x_grupo/",
+                        "url": "listar_estudiantes_x_clase/",
                         "method": 'POST',
                         "data":{'opcion':'opcidon'},
                         "dataSrc":"",

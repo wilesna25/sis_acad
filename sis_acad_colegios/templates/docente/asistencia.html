@@ -15,27 +15,17 @@
                         <select class="form-control" id="clases" name='selected_clase'>
                             <option value="">Seleccione Clases</option>
                             {% for clase in clases %}
-                                <option value='{{clase.id}}'>{{ clase.clase }}</option>
+                                <option value='{{clase.id}}'>{{ clase.clase }} - {{ clase.grupo.grupo }} </option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-outline">
-                        <label for="" class="col-form-label">
-                            Seleccione Grupo
-                        </label>
-                        <select class="form-control" id="grupos" name='selected_grupo'>
-                                <option value=''>Seleccione Grupo</option>
-                        </select>
+                        <button type="submit" id="btnListarEstudiantes">Listar</button>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="form-outline">
-                        <button type="submit">Listar</button>
-                    </div>
-                </div>
-    </div>
+        </div>
 
     <div class="container asistencias">
         <div class="row">
@@ -70,7 +60,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <input  type="hidden" class="form-control" id="estudiante_id"/>
+                                <input  type="hidden" class="form-control" id="codigo_estudiante"/>
                                 <div class="form-group">
                                     <label for="" class="col-form-label">
                                         Estudiante
@@ -82,10 +72,13 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <input type="checkbox" id="es_justificada" value="first_checkbox">
                                     <label for="" class="col-form-label">
                                         ¿Falta justificada?
                                     </label>
+                                    <select class="form-control" id="es_justificada" name='selected_clase'>
+                                          <option value="0">No</option>
+                                          <option value="1">Si</option>
+                        </select>
                                 </div>
                             </div>
                         </div>
@@ -109,6 +102,7 @@
             </div>
         </div>
     </div>
+    </div>
 {% endblock content %}
 
 {% block js %}
@@ -117,60 +111,89 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
     <script type="text/javascript">
        $(document).ready( function () {
+
+            function getTodayDate(){
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var yyyy = today.getFullYear();
+                today = mm + '/' + dd + '/' + yyyy;
+                return today;
+            }
+
             var csrftoken = Cookies.get('csrftoken');
-            alert("Hola");
-            tablaAsistencias = $('#tablaAsistencias').DataTable({
-                    "responsive" : true,
-                    "autoWidth" : false,
-                    ajax:{
-                        "url": "listar_estudiantes_x_clase/",
-                        "method": 'POST',
-                        "data":{'opcion':'opcidon'},
-                        "dataSrc":"",
-                        "headers": {'X-CSRFToken': '{{ csrf_token }}'},
-                    },
-                    "columns":[
-                        {"data": "id"},
-                        {"data": "cod_estudiante"},
-                        {"data": "apellidos"},
-                        {"data": "nombres"},
-                        {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnReportar'><i class='material-icons'>Reportar</i></button></div></div>"}
-                    ]
+            var datatablefull = false;
+
+            $(document).on("click", "#btnListarEstudiantes", function(){
+                clases_select_val = $("#clases").val();
+                if (clases_select_val.length != '' ){
+                    if(datatablefull){ 
+                        limpiarDataTable('tablaAsistencias');
+                    }
+                    tablaAsistencias = $('#tablaAsistencias').DataTable({
+                                "responsive" : true,
+                                "autoWidth" : false,
+                        ajax:{
+                            "url": "listar_estudiantes_x_clase/",
+                            "method": 'POST',
+                            "data":{'clase_id':clases_select_val},
+                            "dataSrc":"",
+                            "headers": {'X-CSRFToken': '{{ csrf_token }}'},
+                        },
+                            "columns":[
+                                {"data": "id"},
+                                {"data": "cod_estudiante"},
+                                {"data": "apellidos"},
+                                {"data": "nombres"},
+                                {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnReportar'><i class='material-icons'>Reportar</i></button></div></div>"}
+                            ]
+                        });
+                          $('#tablaAsistencias').DataTable( {
+                                "initComplete": function () {
+                                    datatablefull = true;
+                                }
+                            });
+                }else{
+                    alert("Seleccione clase");
+                    }
             });
+
+
+            function limpiarDataTable(tablename){
+                    try {
+                        datatable = $('#'+tablename);
+                        datatable.row(fila.parents('tr')).remove().draw();
+                        datatable.draw();
+                        datatable.ajax.reload();
+                    } catch (error) {
+                      console.error(error);
+                    }
+            }
+
+            
             var fila; //captura la fila, para editar o eliminar/
             $('#formAsistencias').submit(function(e){
+                codigo_estudiante = $.trim($('#codigo_estudiante').val());
+                clase = $.trim($('#clases').val());
+                observaciones = $("#observaciones").val();
+                es_justificada = $("#es_justificada").val();
                 e.preventDefault();
                 url='';
                 if(opcion===1){
-                    url = 'reportar_inasistencia/';
+                    url = 'guardar_falla_asistencia/';
                 }else{
-                    url = 'editar_matriculas/';
+                    url = '/';
                 }
-                estudiante_id = $.trim($('#id_estudiante').val());
-                codigo_estudiante = $.trim($('#codigo_estudiante').val());
-                nid = $.trim($('#nid').val());
-                nombres = $.trim($('#nombres_estudiante').val());
-                apellidos = $.trim($('#apellidos_estudiante').val());
-                fecha_nacimiento = $.trim($('#fecha_nacimiento').val());
-                direccion = $.trim($('#direccion').val());
-                telefono = $.trim($('#telefono').val());
-                correo = $.trim($('#correo').val());
-                grupo = $.trim($('#grupos').val());
                     $.ajax({
                       url: url,
                       type: "POST",
                       datatype:"json",
                       data:  {
-                                'id' :id,
-                                'cod_estudiante':codigo_estudiante,
-                                'dni':nid,
-                                'nombres':nombres,
-                                'apellidos' : apellidos,
-                                'fecha_nacimiento':fecha_nacimiento,
-                                'direccion':direccion,
-                                'telefono':telefono,
-                                'correo' : correo,
-                                'grupo':grupo
+                                'codigo_estudiante' : codigo_estudiante,
+                                'clase' : clase,
+                                'observaciones' : observaciones,
+                                'fecha' : '',
+                                'es_justificada' : es_justificada
                               },
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
                       success: function(data) {
@@ -179,20 +202,7 @@
                 $('#modalCRUD').modal('hide');
             });
 
-            $(document).on("change", "#clases", function(){
-
-                $.ajax({
-                      url: 'listar_grupos_por_clase/',
-                      type: "POST",
-                      datatype:"json",
-                      data:  {
-                                'clase_id' :$("#clases").val()
-                              },
-                      headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function(data) {
-                       }
-                    });
-                });
+     
             //para limpiar los campos antes registrar asignatura
             function mostrarFormularioReportarAsistencia(){
                 opcion = 1; //alta
@@ -200,47 +210,28 @@
                 $("#formAsistencias").trigger("reset");
                 $(".modal-header").css( "background-color", "#17a2b8");
                 $(".modal-header").css( "color", "white" );
-                $(".modal-title").text("Nueva Asignatura");
+                $(".modal-title").text("Nueva Falla");
                 $('#modalCRUD').modal('show');
             }
 
-            //Editar / Reportar Asistencia
+
+            // Reportar Asistencia
             $(document).on("click", ".btnReportar", function(){
-                opcion = 2;//editar
+                opcion = 1;//guardar
                 fila = $(this).closest("tr");
                 estudiante_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
                 cod_estudiante = fila.find('td:eq(1)').text();
                 apellidos = fila.find('td:eq(2)').text();
                 nombres = fila.find('td:eq(3)').text();
-                $("#estudiante_id").val(estudiante_id);
+                $("#codigo_estudiante").val(cod_estudiante);
                 $("#estudiante_nombres").val(apellidos + ' ' + nombres);
                 $(".modal-header").css("background-color", "#007bff");
                 $(".modal-header").css("color", "white" );
-                $(".modal-title").text("Reportar Inasistencia");
+                $(".modal-title").text("Reportar Inasistencia "+getTodayDate());
                 $('#modalCRUD').modal('show');
             });
 
-            //Borrar
-            $(document).on("click", ".btnBorrar", function(){
-                fila = $(this).closest("tr");
-                asignatura_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
-                asignatura_nombre = fila.find('td:eq(1)').text();
-                var respuesta = confirm("¿Está seguro de borrar el registro "+asignatura_nombre+"?");
-                if (respuesta) {
-                    $.ajax({
-                      url: "eliminar_matricula/",
-                      type: "POST",
-                      datatype:"json",
-                      data:  {"id_estudiante":id_estudiante},
-                      headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function() {
-                          tablaMatriculas.row(fila.parents('tr')).remove().draw();
-                          $('#tablaMatriculas').draw();
-                          tablaMatriculas.ajax.reload();
-                       }
-                    });
-                }
-             });
+
         } );
     </script>
 {% endblock js %}

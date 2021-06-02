@@ -471,6 +471,18 @@ def crud_asistencia(request):
     }
     return render(request, 'docente/asistencia.html', context)
 
+
+def ver_asistencias(request):
+    try:
+        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+    except:
+        clases = None
+    context = {
+        'clases' : clases
+    }
+    return render(request, 'docente/ver_asistencias.html', context)
+
+
 class listar_asistencias_estudiantes(ListView):
     model = Estudiantes
 
@@ -490,6 +502,11 @@ class listar_asistencias_estudiantes(ListView):
         data = json.dumps(lista_estudiantes)
         return HttpResponse(data, 'application/json')
 
+#BOLETIN
+def ver_boletin(request):
+    context = {}
+    return render(request, 'docente/boletin.html', context)
+
 #CALIFICACIONES
 def crud_calificaciones(request):
     try:
@@ -501,6 +518,16 @@ def crud_calificaciones(request):
     }
     return render(request, 'docente/calificaciones.html', context)
 
+def ver_calificaciones(request):
+
+    try:
+        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+    except:
+        clases = None
+    context = {
+        'clases' : clases
+    }
+    return render(request, 'docente/ver_calificaciones.html', context)
 
 #
 #ESTUDIANTES VIEWS
@@ -509,20 +536,31 @@ def crud_calificaciones(request):
 class listar_estudiantes_x_clase(ListView):
     model = Estudiantes_por_Grupo
 
-    def get_queryset(self):
-        return self.model.objects.all()
+    def get_queryset(self, grupo_clase):
+        return self.model.objects.filter(grupo=grupo_clase)
+
+
+    def get_grupo_clase(self,clase):
+        grupo = clase.grupo
+        return grupo
 
     def post(self, request, *args, **kwargs):
-        lista_estudiantes = []
-        for estudiante_x_grupo in self.get_queryset():
-            data_estudiante = {}
-            data_estudiante['id'] = estudiante_x_grupo.id
-            data_estudiante['cod_estudiante'] = estudiante_x_grupo.estudiante.cod_estudiante
-            data_estudiante['nombres'] = estudiante_x_grupo.estudiante.nombres
-            data_estudiante['apellidos'] = estudiante_x_grupo.estudiante.apellidos
-            lista_estudiantes.append(data_estudiante)
-        data = json.dumps(lista_estudiantes)
-        return HttpResponse(data, 'application/json')
+        try:
+            clase = Clases.objects.get(id=request.POST['clase_id'])
+            grupo_clase = self.get_grupo_clase(clase)
+            lista_estudiantes = []
+            for estudiante_x_grupo in self.get_queryset(grupo_clase):
+                data_estudiante = {}
+                data_estudiante['id'] = estudiante_x_grupo.id
+                data_estudiante['cod_estudiante'] = estudiante_x_grupo.estudiante.cod_estudiante
+                data_estudiante['nombres'] = estudiante_x_grupo.estudiante.nombres
+                data_estudiante['apellidos'] = estudiante_x_grupo.estudiante.apellidos
+                lista_estudiantes.append(data_estudiante)
+            data = json.dumps(lista_estudiantes)
+            return HttpResponse(data, 'application/json')
+        except:
+            return HttpResponse('listar_estudiantes_x_clase no data', 'application/json')
+
 
 
 def ver_calificaciones_estudiante(request):
@@ -530,6 +568,49 @@ def ver_calificaciones_estudiante(request):
     return render(request, 'estudiante/calificaciones.html', context)
 
 
+def guardar_falla_asistencia(request):
+    try:
+        justificada = False
+        codigo_estudiante = request.POST['codigo_estudiante']
+        clase_id = request.POST['clase']
+        observaciones = request.POST['observaciones']
+        es_justificada = request.POST['es_justificada']
+        if(es_justificada=='1'):
+            justificada = True
+        print("Heeere")
+        fallaasistencias = FallasAsistencias.objects.create(
+                estudiante=Estudiantes.objects.get(cod_estudiante=codigo_estudiante),
+                clase=Clases.objects.get(id=clase_id),
+                justificada=justificada,
+                observaciones=observaciones
+        )
+        fallaasistencias.save()
+        return HttpResponse("falla guardada", 'application/json')
+    except:
+        return HttpResponse("error", 'application/json')
 
 
 
+
+def listar_fallas_asistencia_por_clase(request):
+    try:
+        lista_fallas_asistencias = []
+        clase = Clases.objects.get(id=request.POST['clase_id'])
+        fallasasistencia_x_clase=FallasAsistencias.objects.filter(clase=clase)
+        for fallaasistencia in fallasasistencia_x_clase:
+            falla_asistencia = {}
+            falla_asistencia['clase'] = fallaasistencia.clase.clase
+            falla_asistencia['fecha'] = fallaasistencia.fecha.isoformat()
+            falla_asistencia['codigo_estudiante'] = fallaasistencia.estudiante.cod_estudiante
+            falla_asistencia['apellidos_estudiante'] = fallaasistencia.estudiante.apellidos
+            falla_asistencia['nombres_estudiante'] = fallaasistencia.estudiante.nombres
+            falla_asistencia['es_justificada'] = fallaasistencia.justificada
+            lista_fallas_asistencias.append(falla_asistencia)
+            print("falla asistenciass !!!")
+            print(falla_asistencia)
+            print("utlimo")
+        data = json.dumps(lista_fallas_asistencias)
+        print("lassst")
+        return HttpResponse(data, 'application/json')
+    except:
+        return HttpResponse("unexpected error", 'application/json')

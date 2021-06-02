@@ -90,3 +90,23 @@ class MatricularEstudianteForm(ModelForm):
         est_x_grupo = Estudiantes_por_Grupo.objects.create(estudiante=estudiante, grupo=matricula.grupo)
         est_x_grupo.save()
         return estudiante
+
+
+class FallaAsistenciasForm(ModelForm):
+    class Meta:
+        model = FallasAsistencias
+        fields = '__all__'
+
+    def save(self):
+        est_id = self.cleaned_data.get('est_id')
+        cla_id = self.cleaned_data.get('cla_id')
+        es_jus = self.cleaned_data.get('es_jus')
+        obs = self.cleaned_data.get('obs')
+        fal_asi =  FallasAsistencias.objects.create(
+            estudiante=Estudiantes.objects.get(id=est_id),
+            clase=Clases.objects.get(id=cla_id),
+            justificada=es_jus,
+            obervaciones=obs
+        )
+        fal_asi.save()
+        return fal_asi

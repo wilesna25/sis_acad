@@ -4,8 +4,12 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 
 
+
 urlpatterns = [
     path('', views.crud_docentes, name="crud_docentes"),
+    ##
+    #LOGIN - LOGOUT
+    ##
     path('login/', LoginView.as_view(template_name='login.html'), name="login"),
     path('logout/', LoginView.as_view(template_name='logout.html'), name="logout"),
     #COORDINADOR PATHS
@@ -59,7 +63,10 @@ urlpatterns = [
     #DOCENTE PATHS
     #------------------------------------------------------------------------------------------------------------------------------
     #ASISTENCIA
-    path('docente/asistencia/', views.crud_asistencia, name="crud_asistencia"),
+    path('docente/asistencias/', views.crud_asistencia, name="crud_asistencia"),
+    #GestionEstudiantes
+    path('docente/asistencias/listar_estudiantes_x_clase/', views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
+
     path('coordinador/asignaturas/listar_asistencias_estudiantes', views.listar_asistencias_estudiantes.as_view(), name="listar_asistencias_estudiantes"),
     #CALIFICACIONES
     path('docente/calificaciones/', views.crud_calificaciones, name="crud_calificaciones"),
@@ -67,4 +74,3 @@ urlpatterns = [
     #ESTUDIANTE PATHS
     path('estudiante/', views.ver_calificaciones_estudiante, name="ver_calificaciones_estudiante")
 ]
-

@@ -111,7 +111,7 @@ class Docentes(models.Model):
     direccion = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return self.dni
+        return self.user.first_name
     #nombres = models.CharField(max_length=200, null=True)
     #apellidos = models.CharField(max_length=200, null=True)
   #  telefono  = models.IntegerField(null=True)
@@ -172,3 +172,12 @@ class Matriculas(models.Model):
 class Estudiantes_por_Grupo(models.Model):
     grupo = models.ForeignKey(Grupos, on_delete=models.DO_NOTHING, null=True)
     estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
+
+
+class FallasAsistencias(models.Model):
+    estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
+    grupo = models.ForeignKey(Grupos, on_delete=models.DO_NOTHING, null=True)
+    justificada = models.BooleanField(default=False)
+    observaciones = models.CharField(max_length=500, null=True)
+    fecha = models.DateField(default=date.today)

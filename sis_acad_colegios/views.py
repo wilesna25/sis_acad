@@ -462,8 +462,12 @@ class crear_matriculas(CreateView):
 
 #ASISTENCIAS
 def crud_asistencia(request):
+    try:
+        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+    except:
+        clases = None
     context = {
-        'grupos' : Grupos.objects.all()
+        'clases' : clases
     }
     return render(request, 'docente/asistencia.html', context)
 
@@ -488,13 +492,38 @@ class listar_asistencias_estudiantes(ListView):
 
 #CALIFICACIONES
 def crud_calificaciones(request):
-    context = {}
+    try:
+        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+    except:
+        clases = None
+    context = {
+        'clases' : clases
+    }
     return render(request, 'docente/calificaciones.html', context)
 
 
 #
 #ESTUDIANTES VIEWS
 #
+
+class listar_estudiantes_x_clase(ListView):
+    model = Estudiantes_por_Grupo
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        lista_estudiantes = []
+        for estudiante_x_grupo in self.get_queryset():
+            data_estudiante = {}
+            data_estudiante['id'] = estudiante_x_grupo.id
+            data_estudiante['cod_estudiante'] = estudiante_x_grupo.estudiante.cod_estudiante
+            data_estudiante['nombres'] = estudiante_x_grupo.estudiante.nombres
+            data_estudiante['apellidos'] = estudiante_x_grupo.estudiante.apellidos
+            lista_estudiantes.append(data_estudiante)
+        data = json.dumps(lista_estudiantes)
+        return HttpResponse(data, 'application/json')
+
 
 def ver_calificaciones_estudiante(request):
     context = {}

@@ -55,17 +55,17 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="formIr" action="mostrar_boletin_estudiante/">
+                <form id="formIr" method="POST" action="mostrar_boletin_estudiante/">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 {% csrf_token %}  
-                                <input  type="hidden" class="form-control" id="codigo_estudiante"/>
+                                <input  type="hidden" class="form-control" id="codigo_estudiante" name="codigo_estudiante"/>
                                 <div class="form-group">
                                     <label for="" class="col-form-label">
                                         Estudiante Código
                                     </label>
-                                    <input  type="text" class="form-control" id="estudiante_codigo"/>
+                                    <input  type="text" class="form-control" id="estudiante_codigo" name="estudiante_codigo"/>
                                 </div>
                             </div>
                         </div>
@@ -127,24 +127,6 @@
                 $(".modal-title").text("Ver boletin");
                 $('#modalCRUD').modal('show');
             });
-
-           // $('#formIr').submit(function(e){
-           //      e.preventDefault();
-           //          $.ajax({
-           //            url: 'mostrar_boletin_estudiante/',
-           //            type: "POST",
-           //            datatype:"json",
-           //            data:  {
-           //                      'estudiante_codigo' : $("#estudiante_codigo").val()
-           //                    },
-           //            headers : {'X-CSRFToken': '{{ csrf_token }}'},
-           //            success: function(data) {
-           //              alert(data);
-           //             }
-           //          });
-           //  });
-
-
 
 
 

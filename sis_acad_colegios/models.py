@@ -109,6 +109,7 @@ class Grupos(models.Model):
     def __str__(self):
         return self.grupo
 
+#asignacion academica
 class Clases(models.Model):
     clase = models.CharField(max_length=200)
     grupo = models.ForeignKey(Grupos, on_delete=models.CASCADE)
@@ -134,9 +135,7 @@ class Estudiantes(models.Model):
     #eps = models.ForeignKey(Eps, on_delete=models.DO_NOTHING, null=True)
    # departamento = models.ForeignKey(Departamentos, on_delete=models.DO_NOTHING, null=True)
     #ciudad = models.ForeignKey(Ciudades, on_delete=models.CASCADE, null=True)
-   # grupo_sanguineo = models.ForeignKey(Grupos_sanguineos, on_delete=models.DO_NOTHING, null=True)
-  #  nivel_academico_docente no= models.ForeignKey(Niveles_academicos_docentes, on_delete=models.DO_NOTHING, null=True)
-   # tipo_poblacion = models.ForeignKey(Tipos_poblaciones, on_delete=models.DO_NOTHING)
+
 
 class Matriculas(models.Model):
     estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)

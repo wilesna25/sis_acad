@@ -516,10 +516,82 @@ def ver_boletin(request):
 
 
 def mostrar_boletin_estudiante(request):
+    estudiante_codigo = request.POST['estudiante_codigo']
+    estudiante = Estudiantes.objects.get(cod_estudiante=estudiante_codigo)
+    matricula = obtener_estudiante_matricula(estudiante)
+    grupo = matricula.grupo
+    sede = grupo.sede.nombre
+    grado = grupo.grado.grado
+    jornada = grupo.jornada.jornada
+    calificaciones = obtener_clases_calificadas_por_estudiante(estudiante)
+    #print(calificaciones[0]['area_asignatura'])
     context = {
-        'test': 'HOLA MUNDO'
+        'estudiante_nombre': estudiante.apellidos + "  " + estudiante.nombres,
+        'estudiante_jornada': jornada,
+        'estudiante_grado' : grado,
+        'estudiante_sede' : sede,
+        'calificaciones' : calificaciones
     }
     return render(request, 'docente/boletin_estudiante.html', context)
+
+
+
+def obtener_fallas_asistencias_estudiate_clase():
+    pass
+
+def obtener_clases_calificadas_por_estudiante(estudiante):
+    calificaciones = []
+    clases_calificadas = Calificaciones.objects.filter(estudiante=estudiante)
+    for calificada in clases_calificadas:
+        calificacion_data = {}
+        calificacion_data['area_asignatura'] = calificada.clase.asignatura.area.area + " " + calificada.clase.asignatura.asignatura
+        calificacion_data['periodo'] = calificada.periodo_academico
+        calificacion_data['nivel'] = calificada.nivel_desempeno
+        calificacion_data['calificacion'] = calificada.calificacion
+        calificacion_data['docente'] = calificada.clase.docente.user.last_name + " " + calificada.clase.docente.user.first_name
+        calificacion_data['inasistencias'] = FallasAsistencias.objects.filter(estudiante=estudiante, clase=calificada.clase).count()
+       # calificacion_data['inasistencias'] = calificada.clase.docente.user.last_name + " " + calificada.clase.docente.user.first_name
+        calificaciones.append(calificacion_data)
+    return  calificaciones
+
+
+
+
+
+def obtener_calificaciones(estudiante):
+    calificaciones = []
+    calificacion_data = {}
+    #calificacion_data['area_asignatura']
+    pass
+
+def obtener_calificacion_area_asignatura():
+    pass
+
+def obtener_calificacion_p1(estudiante):
+    calificaciones = Calificaciones.objects.get(estudiante=estudiante)
+    pass
+
+def obtener_calificacion_p2():
+    pass
+
+def obtener_calificacion_p3():
+    pass
+
+def obtener_calificacion_p4():
+    pass
+
+def obtener_calificacion_p5():
+    pass
+
+def obtener_estudiante_calificaciones(estudiante):
+    calificaciones = Calificaciones.objects.filter(estudiante=estudiante)
+    return calificaciones
+
+def obtener_estudiante_matricula(estudiante):
+    matricula = Matriculas.objects.get(estudiante=estudiante)
+    return matricula
+
+
 
 
 def ver_boletin_estudiante(request):

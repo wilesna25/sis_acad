@@ -7,8 +7,8 @@
 
 <div>
     <center>
-        <h1>{{ test }} </h1>
-        <h1>INSTITUCION EDUCATIVA COLOMBIA (SEDE PRINCIPAL) VILLAMARIA - CALDAS</h1>
+        
+        <h1>INSTITUCION EDUCATIVA COLOMBIA ({{ estudiante_sede }}) VILLAMARIA - CALDAS</h1>
 
     </center>
      <div>
@@ -19,435 +19,60 @@
         <caption>BOLETIN DE CALIFICACIONES</caption>
         <thead>
             <tr>
-                <td>INSTITUCION EDUCATIVA COLOMBIA (SEDE PRINCIPAL) VILLAMARIA - CALDAS</td>
+                <td>INSTITUCION EDUCATIVA COLOMBIA ({{ estudiante_sede }} ) VILLAMARIA - CALDAS</td>
                 <td>BOLETIN DE CALIFICACIONES - FINAL</td>
-                <td>NOMBRE DEL ALUMNO:[]</td>
-                <td>JORNADA []</td>
-                <td>PERIODO []</td>
-                <td>AÑO []</td>
-                <td>GRADO []</td>
+                <td>{{ estudiante_nombre }}</td>
+                <td>{{ estudiante_jornada }} </td>
+                <td>2021</td>
+                <td>{{ estudiante_grado }} </td>
             </tr>
         </thead>
-
-
     </table>
 
     <table border="1">
+        <caption>BOLETIN DE CALIFICACIONES</caption>
         <tr>
             <th>AREAS / ASIGNATURAS</th>
-            <th>H.S</th>
-            <th colspan="5">CALIFICACIONES</th>
-            <th colspan="5">INASISTENCIAS (Fallas)</th>
+            <th colspan="3">CALIFICACIONES</th>
             <th>DOCENTES</th>
         </tr>
         <tr>
+            <td>AREA - ASIGNATURA</td>
+            <td>PERIODO</td>
+            <td>CALIFICACION</td>
+            <td>NIVEL DESEMPEÑO</td>
             <td></td>
-            <td></td>
-            <td>P1</td>
-            <td>P2</td>
-            <td>P3</td>
-            <td>P4</td>
-            <td>FINAL</td>
-            <td>P1</td>
-            <td>P2</td>
-            <td>P3</td>
-            <td>P4</td>
-            <td>T.F</td>
+            <td>INASISTENCIAS</td>
         </tr>
+
+{% for calificacion in calificaciones %}
         <tr>
-            <td>CIENCIAS SOCIALES</td>
-            <td></td>
-            <td></td>
-            <td>3.8</td>
-            <td>2.5</td>
-            <td>4.2</td>
-            <td>3.5 BASICO</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>ANDRES CARDONA PEREZ</td>
-
+            <td> {{ calificacion.area_asignatura }} </td>
+            <td> {{ calificacion.periodo }} </td>
+            <td> {{ calificacion.calificacion }} </td>
+            <td> {{ calificacion.nivel }} </td>
+            <td> {{ calificacion.docente }} </td>
+            <td> {{ calificacion.inasistencias }} </td>
         </tr>
-        <tr>
-            <td>Ciencias Sociales - Democracia - 50%</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>ANDRES CARDONA PEREZ</td>
-
-        </tr>
-        <tr>
-            <td>Filosofia - 50%</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>ANDRES CARDONA PEREZ</td>
-
-        </tr>
-        <tr>
-            <td>LENGUA CASTELLANA</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JHON JAIRO HENAO OSORIO</td>
-
-        </tr>
-        <tr>
-            <td>INGLES</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>LUZ MARINA GOMEZ VILLADA</td>
-
-        </tr>
-        <tr>
-            <td>CIENCIAS NATURALES Y EDUCACION AMBIENTAL</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JAVIER ARANGO LOPEZ</td>
-
-        </tr>
-        <tr>
-            <td>Fisica - 50%</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JAVIER ARANGO LOPEZ</td>
-
-        </tr>
-        <tr>
-            <td>Quimica - 50%</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JAVIER ARANGO LOPEZ</td>
-
-        </tr>
-        <tr>
-            <td>CALCULO</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>IVAN DARIO SANCHEZ</td>
-
-        </tr>
-        <tr>
-            <td>EDUCACION FISICA, RECREACION Y DEPORTE</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JOSE YONIER BEDOYA</td>
-
-        </tr>
-        <tr>
-            <td>EDUCACION ETICA Y EN VALORES HUMANOS</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>LILIANA ALZATE GALLEGO</td>
-
-        </tr>
-        <tr>
-            <td>EDUCACION RELIGIOSA</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>LILIANA ALZATE GALLEGO</td>
-
-        </tr>
-        <tr>
-            <td>EDUCACION ARTISTICA</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>LUZ MARINA GOMEZ VILLADA</td>
-
-        </tr>
-        <tr>
-            <td>TECNOLOGIA E INFORMATICA</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JOSE YONIER BEDOYA</td>
-
-        </tr>
-        <tr>
-            <td>Tecnologia e informatica - 33%</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JOSE YONIER BEDOYA</td>
-
-        </tr>
-        <tr>
-            <td>Proyectos Productivos - 33%</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JOSE YONIER BEDOYA</td>
-
-        </tr>
-        <tr>
-            <td>Proyectos Productivos - 33%</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JOSE YONIER BEDOYA</td>
-
-        </tr>
-        <tr>
-            <td>COMPORTAMENTO SOCIAL</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>JHON JAIRO HENAO OSORIO</td>
-
-        </tr>
-
+{% endfor %}
     </table>
-    }
+
+
+<br><br>
+
+
+<br><br>
+
     <table border="1">
         <tr>
-           <td colspan="3">ESTADO ACADEMICO FINAL</td>
+           <td>ESTADO ACADEMICO FINAL</td>
            <td>PROMEDIO</td>
-            <td>P1()</td>
-            <td>P2()</td>
-            <td>P3()</td>
-            <td>P4()</td>
-            <td>F.P1()</td>
-            <td>F.P2()</td>
-            <td>F.P3()</td>
-            <td>F.P4()</td>
-            <td>F.T()</td>
         </tr>
         <tr>
             <td>APROBO[]</td>
-            <td>REPROBO[]</td>
-            <td>PENDIENTE[]</td>
-            <td>PUESTO</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-
-        </tr>
-
-    </table>
-    <center>
-
-        <p>INFORME DETALLADO - PERIODO 4</p>
-    </center>
-    <table border="1">
-        <tr>
-            <td>CIENCIAS SOCIALES Y DEMOCRACIA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-
-        </tr>
-        <tr>
-            <td>FILOSOFIA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>LENGUA CASTELLANA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>INGLES</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>FISICA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>QUIMICA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>CALCULO</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>EDUCACION FISICA, RECREACION Y DEPORTE</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>EDUCACION ETICA Y EN VALORES HUMANOS</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>EDUCACION RELIGIOSA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>EDUCACION ARTISTICA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>TECNOLOGIA E INFORMATICA</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>GESTION DE NEGOCIOS</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
-        </tr>
-        <tr>
-            <td>COMPORTAMIENTO SOCIAL</td>
-            <td>DESEMPEÑO [ ] &quot;&quot;</td>
-            <td>CONCEPTOS DESCRIPTIVOS EXPLICATIVOS [ ]</td>
+            <td>#promedio</td>
         </tr>
     </table>
+    
 </div>
 </body></html>

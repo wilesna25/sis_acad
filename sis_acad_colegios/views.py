@@ -606,11 +606,43 @@ def listar_fallas_asistencia_por_clase(request):
             falla_asistencia['nombres_estudiante'] = fallaasistencia.estudiante.nombres
             falla_asistencia['es_justificada'] = fallaasistencia.justificada
             lista_fallas_asistencias.append(falla_asistencia)
-            print("falla asistenciass !!!")
-            print(falla_asistencia)
-            print("utlimo")
         data = json.dumps(lista_fallas_asistencias)
-        print("lassst")
+        return HttpResponse(data, 'application/json')
+    except:
+        return HttpResponse("unexpected error", 'application/json')
+
+
+def guardar_calificacion(request):
+    try:
+        print(request.POST)
+        estudiante = Estudiantes.objects.get(cod_estudiante=request.POST['estudiante_codigo'])
+        clase = Clases.objects.get(id=request.POST['clase'])
+        print("class")
+        periodo_academico = int(request.POST['periodo_academico'])
+        calificacion = float(request.POST['calificacion'])
+        #Registra Nota
+        calificacion = Calificaciones.objects.create(estudiante=estudiante, clase=clase, periodo_academico=periodo_academico, calificacion=calificacion)
+        calificacion.save()
+        return HttpResponse("calificacion guardada", 'application/json')
+    except:
+        return HttpResponse("error", 'application/json')
+
+
+def listar_calificaciones_x_clase(request):
+    try:
+        lista_calificaciones = []
+        clase = Clases.objects.get(id=request.POST['clase'])
+        calificaciones = Calificaciones.objects.filter(clase=clase)
+        for calificacion in calificaciones:
+            calificaciones_data = {}
+            calificaciones_data['codigo_estudiante'] = calificacion.estudiante.cod_estudiante
+            calificaciones_data['estudiante'] = calificacion.estudiante.apellidos + " " + calificacion.estudiante.nombres
+            calificaciones_data['grupo'] = calificacion.clase.grupo.grupo
+            calificaciones_data['asignatura'] = calificacion.clase.asignatura.asignatura
+            calificaciones_data['periodo'] = calificacion.periodo_academico
+            calificaciones_data['calificacion'] = calificacion.calificacion
+            lista_calificaciones.append(calificaciones_data)
+        data = json.dumps(lista_calificaciones)
         return HttpResponse(data, 'application/json')
     except:
         return HttpResponse("unexpected error", 'application/json')

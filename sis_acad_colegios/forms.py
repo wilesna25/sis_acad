@@ -92,3 +92,23 @@ class MatricularEstudianteForm(ModelForm):
         return estudiante
 
 
+class RegistrarCalificacion():
+
+    class Meta:
+        model = Calificaciones
+        fields = '__all__'
+
+    @transaction.atomic
+    def save(self):
+        #Obtiene POST
+        estudiante = Estudiantes.objects.get(cod_estudiante=self.cleaned_data.get('estudiante_codigo'))
+        clase = Clases.objects.get(id=self.cleaned_data.get('clase'))
+        periodo_academico = self.cleaned_data.get('periodo_academico')
+        calificacion = self.cleaned_data.get('calificacion')
+        #Registra Nota
+        calificacion = Calificaciones.objects.create(estudiante=estudiante, clase=clase, periodo_academico=periodo_academico, calificacion=calificacion)
+        calificacion.save()
+        return calificacion
+
+
+

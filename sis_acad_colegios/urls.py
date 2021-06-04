@@ -72,7 +72,11 @@ urlpatterns = [
 
     # CALIFICACIONES
     path('docente/calificaciones/', views.crud_calificaciones, name="crud_calificaciones"),
+    path('docente/calificaciones/listar_estudiantes_x_clase/', views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
+    path('docente/calificaciones/guardar_calificacion/', views.guardar_calificacion, name="guardar_calificacion"),
+    path('docente/calificaciones/listar_calificaciones_x_clase/', views.listar_calificaciones_x_clase, name="listar_calificaciones_x_clase"),
     path('docente/ver_calificaciones/', views.ver_calificaciones, name="ver_calificaciones"),
+    path('docente/ver_calificaciones/listar_calificaciones_x_clase/', views.listar_calificaciones_x_clase, name="listar_calificaciones_x_clase"),
 
     #GestionEstudiantes
     path('docente/asistencias/listar_estudiantes_x_clase/', views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),

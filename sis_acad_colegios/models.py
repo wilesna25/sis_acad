@@ -155,3 +155,9 @@ class FallasAsistencias(models.Model):
     justificada = models.BooleanField(default=False)
     observaciones = models.CharField(max_length=500, null=True)
     fecha = models.DateField(default=date.today)
+
+class Calificaciones(models.Model):
+    estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
+    periodo_academico = models.IntegerField(null=True)
+    calificacion = models.FloatField(null=True)

@@ -504,7 +504,13 @@ class listar_asistencias_estudiantes(ListView):
 
 #BOLETIN
 def ver_boletin(request):
-    context = {}
+    try:
+        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+    except:
+        clases = None
+    context = {
+        'clases' : clases
+    }
     return render(request, 'docente/boletin.html', context)
 
 #CALIFICACIONES
@@ -620,13 +626,23 @@ def guardar_calificacion(request):
         print("class")
         periodo_academico = int(request.POST['periodo_academico'])
         calificacion = float(request.POST['calificacion'])
+        nivel_desempeno = obtener_nivel_desempeno_calificacion(float(request.POST['calificacion']))
         #Registra Nota
-        calificacion = Calificaciones.objects.create(estudiante=estudiante, clase=clase, periodo_academico=periodo_academico, calificacion=calificacion)
+        calificacion = Calificaciones.objects.create(estudiante=estudiante, clase=clase, periodo_academico=periodo_academico, calificacion=calificacion, nivel_desempeno=nivel_desempeno)
         calificacion.save()
         return HttpResponse("calificacion guardada", 'application/json')
     except:
         return HttpResponse("error", 'application/json')
 
+def obtener_nivel_desempeno_calificacion(calificacion):
+    nivel = 'Superior'
+    if calificacion <=2.9:
+        nivel = 'Bajo'
+    elif    calificacion >= 3 and calificacion <= 3.9:
+        nivel = 'Básico'
+    elif    calificacion >= 4 and calificacion <=4.5:
+        nivel = 'Alto'
+    return nivel
 
 def listar_calificaciones_x_clase(request):
     try:
@@ -641,6 +657,7 @@ def listar_calificaciones_x_clase(request):
             calificaciones_data['asignatura'] = calificacion.clase.asignatura.asignatura
             calificaciones_data['periodo'] = calificacion.periodo_academico
             calificaciones_data['calificacion'] = calificacion.calificacion
+            calificaciones_data['nivel'] = calificacion.nivel_desempeno
             lista_calificaciones.append(calificaciones_data)
         data = json.dumps(lista_calificaciones)
         return HttpResponse(data, 'application/json')

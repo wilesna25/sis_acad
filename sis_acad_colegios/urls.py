@@ -62,7 +62,9 @@ urlpatterns = [
     #------------------------------------------------------------------------------------------------------------------------------
     #DOCENTE PATHS
     #------------------------------------------------------------------------------------------------------------------------------
-    path('docente/boletin/', views.ver_boletin, name="ver_boletin"),
+    path('docente/ver_boletin/', views.ver_boletin, name="ver_boletin"),
+    path('docente/ver_boletin/listar_estudiantes_x_clase/', views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
+
     #ASISTENCIA
     path('docente/asistencias/', views.crud_asistencia, name="crud_asistencia"),
     path('docente/ver_asistencias/', views.ver_asistencias, name="ver_asistencias"),

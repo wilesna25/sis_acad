@@ -161,3 +161,4 @@ class Calificaciones(models.Model):
     clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
     periodo_academico = models.IntegerField(null=True)
     calificacion = models.FloatField(null=True)
+    nivel_desempeno = models.CharField(max_length=50, null=True)

@@ -62,8 +62,14 @@ urlpatterns = [
     #------------------------------------------------------------------------------------------------------------------------------
     #DOCENTE PATHS
     #------------------------------------------------------------------------------------------------------------------------------
+
+
+    #BOLETIN
     path('docente/ver_boletin/', views.ver_boletin, name="ver_boletin"),
     path('docente/ver_boletin/listar_estudiantes_x_clase/', views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
+    path('docente/ver_boletin/ver_boletin_estudiante/', views.ver_boletin_estudiante, name="ver_boletin_estudiante"),
+    #path('docente/ver_boletin/ver_boletin_estudiante/mostrar_boletin_estudiante/', views.mostrar_boletin_estudiante, name="mostrar_boletin_estudiante"),
+    path('docente/ver_boletin/mostrar_boletin_estudiante/', views.mostrar_boletin_estudiante, name="mostrar_boletin_estudiante"),
 
     #ASISTENCIA
     path('docente/asistencias/', views.crud_asistencia, name="crud_asistencia"),

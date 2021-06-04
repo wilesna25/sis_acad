@@ -513,6 +513,21 @@ def ver_boletin(request):
     }
     return render(request, 'docente/boletin.html', context)
 
+
+
+def mostrar_boletin_estudiante(request):
+    context = {
+        'test': 'HOLA MUNDO'
+    }
+    return render(request, 'docente/boletin_estudiante.html', context)
+
+
+def ver_boletin_estudiante(request):
+    context = {}
+    return render(request, 'docente/boletin_estudiante.html', context)
+
+
+
 #CALIFICACIONES
 def crud_calificaciones(request):
     try:

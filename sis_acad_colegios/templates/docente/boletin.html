@@ -1,7 +1,6 @@
 {% extends 'docente/docente_main.html' %}
 {% load static %}
 {% block content %}
-
 <header xmlns="http://www.w3.org/1999/html">
         <h3 class="text-center">Boletines de estudiantes</h3>
     </header>
@@ -47,6 +46,37 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog" aria-labelledby="modalAsistencias" arial-hiddden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAsistencias"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formIr" action="mostrar_boletin_estudiante/">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                {% csrf_token %}  
+                                <input  type="hidden" class="form-control" id="codigo_estudiante"/>
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">
+                                        Estudiante Código
+                                    </label>
+                                    <input  type="text" class="form-control" id="estudiante_codigo"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btnIr" class="btn btn-dark">Ir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}
 
@@ -78,7 +108,7 @@
                                 {"data": "cod_estudiante"},
                                 {"data": "apellidos"},
                                 {"data": "nombres"},
-                                {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnVerBoletin'><i class='material-icons'>Ver Boletin</i></button></div></div>"}
+                                {"defaultContent": "<div class='text-center'><div class='btn-group'><button type='submit' class='btn btn-primary btn-sm btnVerBoletin'><i class='material-icons'>Ver Boletin</i></button></div></div>"}
                             ]
                         });
                 }else{
@@ -91,9 +121,30 @@
             $(document).on("click", ".btnVerBoletin", function(){
                 fila = $(this).closest("tr");
                 estudiante_codigo = fila.find('td:eq(1)').text();
-                console.log("Estudiante código !!!!!!!!");
-                console.log(estudiante_codigo);
+                $("#estudiante_codigo").val(estudiante_codigo);
+                $(".modal-header").css("background-color", "#007bff");
+                $(".modal-header").css("color", "white" );
+                $(".modal-title").text("Ver boletin");
+                $('#modalCRUD').modal('show');
             });
+
+           // $('#formIr').submit(function(e){
+           //      e.preventDefault();
+           //          $.ajax({
+           //            url: 'mostrar_boletin_estudiante/',
+           //            type: "POST",
+           //            datatype:"json",
+           //            data:  {
+           //                      'estudiante_codigo' : $("#estudiante_codigo").val()
+           //                    },
+           //            headers : {'X-CSRFToken': '{{ csrf_token }}'},
+           //            success: function(data) {
+           //              alert(data);
+           //             }
+           //          });
+           //  });
+
+
 
 
 

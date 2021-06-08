@@ -523,7 +523,7 @@ def mostrar_boletin_estudiante(request):
     sede = grupo.sede.nombre
     grado = grupo.grado.grado
     jornada = grupo.jornada.jornada
-    calificaciones = obtener_clases_calificadas_por_estudiante(estudiante)
+    calificaciones = obtener_clases_calificadas_por_estudiante(estudiante, grupo.grado)
     #print(calificaciones[0]['area_asignatura'])
     context = {
         'estudiante_nombre': estudiante.apellidos + "  " + estudiante.nombres,
@@ -539,7 +539,7 @@ def mostrar_boletin_estudiante(request):
 def obtener_fallas_asistencias_estudiate_clase():
     pass
 
-def obtener_clases_calificadas_por_estudiante(estudiante):
+def obtener_clases_calificadas_por_estudiante(estudiante, grado):
     calificaciones = []
     clases_calificadas = Calificaciones.objects.filter(estudiante=estudiante)
     for calificada in clases_calificadas:
@@ -550,12 +550,17 @@ def obtener_clases_calificadas_por_estudiante(estudiante):
         calificacion_data['calificacion'] = calificada.calificacion
         calificacion_data['docente'] = calificada.clase.docente.user.last_name + " " + calificada.clase.docente.user.first_name
         calificacion_data['inasistencias'] = FallasAsistencias.objects.filter(estudiante=estudiante, clase=calificada.clase).count()
-       # calificacion_data['inasistencias'] = calificada.clase.docente.user.last_name + " " + calificada.clase.docente.user.first_name
+        calificacion_data['logros'] = obtener_logros_x_asignatura_grado(grado, calificada.clase.asignatura, calificacion_data['nivel'] )
         calificaciones.append(calificacion_data)
     return  calificaciones
 
 
-
+def obtener_logros_x_asignatura_grado(grado, asignatura, nivel_desempeno):
+    try:
+        logros = LogrosAsignaturas.objects.filter(grado=grado, asignatura=asignatura, nivel_desempeno=nivel_desempeno)
+    except:
+        logros = None
+    return logros
 
 
 def obtener_calificaciones(estudiante):
@@ -707,15 +712,14 @@ def listar_fallas_asistencia_por_clase(request):
 
 def guardar_calificacion(request):
     try:
-        print(request.POST)
         estudiante = Estudiantes.objects.get(cod_estudiante=request.POST['estudiante_codigo'])
         clase = Clases.objects.get(id=request.POST['clase'])
-        print("class")
         periodo_academico = int(request.POST['periodo_academico'])
         calificacion = float(request.POST['calificacion'])
         nivel_desempeno = obtener_nivel_desempeno_calificacion(float(request.POST['calificacion']))
         #Registra Nota
-        calificacion = Calificaciones.objects.create(estudiante=estudiante, clase=clase, periodo_academico=periodo_academico, calificacion=calificacion, nivel_desempeno=nivel_desempeno)
+        calificacion = Calificaciones.objects.create(estudiante=estudiante, clase=clase, periodo_academico=periodo_academico,
+                                                     calificacion=calificacion, nivel_desempeno=nivel_desempeno)
         calificacion.save()
         return HttpResponse("calificacion guardada", 'application/json')
     except:
@@ -726,7 +730,7 @@ def obtener_nivel_desempeno_calificacion(calificacion):
     if calificacion <=2.9:
         nivel = 'Bajo'
     elif    calificacion >= 3 and calificacion <= 3.9:
-        nivel = 'Básico'
+        nivel = 'Basico'
     elif    calificacion >= 4 and calificacion <=4.5:
         nivel = 'Alto'
     return nivel

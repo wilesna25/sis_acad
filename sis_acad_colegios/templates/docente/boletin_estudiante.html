@@ -54,6 +54,11 @@
             <td> {{ calificacion.docente }} </td>
             <td> {{ calificacion.inasistencias }} </td>
         </tr>
+        {% for logro in calificacion.logros %}
+        <tr colspan="6">
+            <td colspan="6"> {{ logro.logro }}</td>
+        </tr>
+        {% endfor %}
 {% endfor %}
     </table>
 

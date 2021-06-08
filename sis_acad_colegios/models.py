@@ -73,6 +73,12 @@ class GradosAcademicos(models.Model):
     def __str__(self):
         return self.grado
 
+class LogrosAsignaturas(models.Model):
+    grado =  models.ForeignKey(GradosAcademicos,  on_delete=models.CASCADE)
+    asignatura = models.ForeignKey(Asignaturas,  on_delete=models.CASCADE)
+    nivel_desempeno = models.CharField(max_length=50)
+    logro = models.CharField(max_length=500)
+
 
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)

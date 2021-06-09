@@ -56,6 +56,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6">
+                                <input  type="hidden" class="form-control" id="docente_id"/>
                                 <div class="form-group">
                                     Nombres
                                     <input  type="text" class="form-control" id="first_name"/>
@@ -81,12 +82,6 @@
                                     <input  type="text" class="form-control" id="direccion"/>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    Email
-                                    <input  type="text" class="form-control" id="username"/>
-                                </div>
-                            </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
                                 <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
@@ -106,6 +101,31 @@
 
     <script type="text/javascript">
     $(document).ready( function () {
+
+        function cargarDataTable(){
+                    $('#tablaDocentes').DataTable().destroy();
+                    var csrftoken = Cookies.get('csrftoken');
+                    tablaDocentes = $('#tablaDocentes').DataTable({
+                    "responsive" : true,
+                    "autoWidth" : false,
+                    ajax:{
+                        "url": "listar_docentes/",
+                        "method": 'POST',
+                        "data":{'opcion':'opcidon'},
+                        "dataSrc":"",
+                        "headers": {'X-CSRFToken': csrftoken},
+                    },
+                    "columns":[
+                        {"data": "id"},
+                        {"data": "dni"},
+                        {"data": "first_name"},
+                        {"data": "last_name"},
+                        {"data": "direccion"},
+                        {"data": "username"},
+                        {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                    ]
+            });
+        }
             var csrftoken = Cookies.get('csrftoken');
             tablaDocentes = $('#tablaDocentes').DataTable({
                     "responsive" : true,
@@ -146,6 +166,10 @@
                       url: url,
                       type: "POST",
                       datatype:"json",
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                       data:  {
                                 'docente_id' :docente_id,
                                 'username' :'docente',
@@ -157,9 +181,7 @@
                                 'direccion':direccion,
                                 'username':username
                               },
-                      headers : {'X-CSRFToken': csrftoken},
-                      success: function(data) {
-                       }
+                      headers : {'X-CSRFToken': csrftoken}
                     });
                 $('#modalCRUD').modal('hide');
             });
@@ -182,9 +204,10 @@
                 console.log("-----:..---");
                 console.log(fila.find('td:eq(1)').text());
                 docente_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
-                first_name = fila.find('td:eq(1)').text();
-                last_name = fila.find('td:eq(2)').text();
-                dni = fila.find('td:eq(3)').text();
+                dni = fila.find('td:eq(1)').text();
+                $("#docente_id").val(docente_id);
+                first_name = fila.find('td:eq(2)').text();
+                last_name = fila.find('td:eq(3)').text();
                 direccion = fila.find('td:eq(4)').text();
                 $("#docente_id").val(docente_id);
                 $("#first_name").val(first_name);
@@ -193,7 +216,7 @@
                 $("#direccion").val(direccion);
                 $(".modal-header").css("background-color", "#007bff");
                 $(".modal-header").css("color", "white" );
-                $(".modal-title").text("Editar Asignatura");
+                $(".modal-title").text("Editar Docente");
                 $('#modalCRUD').modal('show');
             });
 
@@ -201,7 +224,7 @@
             $(document).on("click", ".btnBorrar", function(){
                 console.log("test");
                 fila = $(this).closest("tr");
-                asignatura_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
+                docente_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
                 asignatura_nombre = fila.find('td:eq(1)').text();
                 console.log("id:::");
                 console.log(asignatura_id);
@@ -213,10 +236,9 @@
                       datatype:"json",
                       data:  {"docente_id":docente_id},
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function() {
-                          tablaAsignaturas.row(fila.parents('tr')).remove().draw();
-                          $('#tablaAsignaturas').draw();
-                          tablaAsignaturas.ajax.reload();
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
                        }
                     });
                 }

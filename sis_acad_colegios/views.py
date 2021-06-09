@@ -40,8 +40,8 @@ class crear_sedes(CreateView):
         self.form = SedeForm(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done', 'application/json')
-        return HttpResponse('error', 'application/json')
+            return HttpResponse('{ "status":"Sede creada" } ', 'application/json')
+        return HttpResponse('{ "status":"error creando  sede" } ', 'application/json')
 
 
 class editar_sedes(UpdateView):
@@ -53,8 +53,8 @@ class editar_sedes(UpdateView):
         self.form = SedeForm(request.POST, instance=sede)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done', 'application/json')
-        return HttpResponse('error', 'application/json')
+            return HttpResponse('{ "status":"Sede editada" } ', 'application/json')
+        return HttpResponse('{ "status":"error editando  sede" } ', 'application/json')
 
 
 class eliminar_sedes(DeleteView):
@@ -66,8 +66,8 @@ class eliminar_sedes(DeleteView):
     def post(self, request, *args, **kwargs):
         asignatura = self.get_query(request.POST['id'])
         asignatura.delete()
-        return HttpResponse('drop', 'application/json')
-
+        return HttpResponse(' {"status":"registro borrado"}', 'application/json')
+ 
 #PERIODOS ACADÉMICOS
 
 def crud_periodos_academicos(request):
@@ -170,15 +170,30 @@ class registrar_docente(CreateView):
 
     def post(self, request, *args, **kwargs):
         self.form = DocenteRegistroForm(request.POST)
-        print(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('docente creado', 'application/json')
+            return HttpResponse('{ "status":"docente creado" } ', 'application/json')
         else:
             err=self.form.errors
-            print(err)
-            return HttpResponse('error: '+err, 'application/json')
+            return HttpResponse('{ "status":"error creando docente ' +err+'" } ', 'application/json')
 
+
+def editar_docente(request):
+    user_docente = User.objects.get(id=request.POST['docente_id'])
+    user_docente.first_name = request.POST['first_name']
+    user_docente.last_name = request.POST['last_name']
+    user_docente.save()
+    docente = Docentes.objects.get(user=user_docente)
+    docente.dni = request.POST['dni']
+    docente.direccion = request.POST['direccion']
+    docente.save()
+    return HttpResponse('{ "status":"docente editado" } ', 'application/json')
+
+
+def eliminar_docente(request):
+    docente = Docentes.objects.get(user=User.objects.get(id=request.POST['docente_id']))
+    docente.delete()
+    return HttpResponse('{ "status":"docente borrado" } ', 'application/json')
 
 #ÁREAS
 class listar_areas(ListView):

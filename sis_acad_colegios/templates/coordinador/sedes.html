@@ -6,9 +6,14 @@
     </header>
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                 <button id="btnNuevo" type="button" class="btn btn-info" data-toggle="modal">
                     <i class="material-icons">library_add</i>
+                </button>
+            </div>
+            <div class="col-lg-6">
+                <button id="btnActualizar" type="button" class="btn btn-info" data-toggle="modal">
+                   Actualizar
                 </button>
             </div>
         </div>
@@ -92,6 +97,30 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 
     <script type="text/javascript">
+        function cargarDataTable(){
+            $('#tablaSedes').DataTable().destroy();
+            var csrftoken = Cookies.get('csrftoken');
+            tablaSedes = $('#tablaSedes').DataTable({
+                    "responsive" : true,
+                    "autoWidth" : false,
+                    ajax:{
+                        "url": "listar_sedes/",
+                        "method": 'POST',
+                        "data":{'opcion':'opcion'},
+                        "dataSrc":"",
+                        "headers": {'X-CSRFToken': '{{ csrf_token }}'},
+                    },
+                    "columns":[
+                        {"data": "id"},
+                        {"data": "nombre"},
+                        {"data": "direccion"},
+                        {"data": "telefono"},
+                        {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                    ]
+            });
+        }
+
+
        $(document).ready( function () {
             var csrftoken = Cookies.get('csrftoken');
             tablaSedes = $('#tablaSedes').DataTable({
@@ -113,6 +142,12 @@
                     ]
             });
             var fila; //captura la fila, para editar o eliminar/
+
+            function handleData(data) {
+                alert(data);
+                //do some stuff
+            }
+
             $('#formSedes').submit(function(e){
                 e.preventDefault();
                 url='';
@@ -128,6 +163,10 @@
                       url: url,
                       type: "POST",
                       datatype:"json",
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                       data:  {
                                 'id' :$('#id').val(),
                                 'nombre':nombre,
@@ -135,11 +174,10 @@
                                 'telefono':telefono
                               },
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function(data) {
-                       }
                     });
                 $('#modalCRUD').modal('hide');
             });
+
 
             //para limpiar los campos antes registrar Sede
             $("#btnNuevo").click(function(){
@@ -180,16 +218,22 @@
                       url: "eliminar_sedes/",
                       type: "POST",
                       datatype:"json",
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                       data:  {"id":id},
-                      headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function() {
-                          tablaSedes.row(fila.parents('tr')).remove().draw();
-                          $('#tablaSedes').draw();
-                          tablaSedes.ajax.reload();
-                       }
+                      headers : {'X-CSRFToken': '{{ csrf_token }}'}
                     });
                 }
              });
+
+
+            //para limpiar los campos antes registrar Sede
+            $("#btnActualizar").click(function(){
+                $('#tablaSedes').DataTable().destroy();
+                cargarDataTable();
+            });
         } );
     </script>
 {% endblock js %}

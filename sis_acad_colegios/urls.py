@@ -20,10 +20,12 @@ urlpatterns = [
     path('coordinador/sedes/editar_sedes/', views.editar_sedes.as_view(), name="editar_sedes"),
     path('coordinador/sedes/eliminar_sedes/', views.eliminar_sedes.as_view(),
          name="eliminar_sedes"),
-    #Docentes
+    #Docentesa
     path('coordinador/docentes/', views.crud_docentes, name="crud_docentes"),
     path('coordinador/docentes/listar_docentes/', views.listar_docentes.as_view(), name="listar_docentes"),
     path('coordinador/docentes/registrar_docente/', views.registrar_docente.as_view(), name="registrar_docente"),
+    path('coordinador/docentes/editar_docente/', views.editar_docente, name="editar_docente"),
+    path('coordinador/docentes/eliminar_docente/', views.eliminar_docente, name="eliminar_docente"),
     #Matrículas
     path('coordinador/matriculas/', views.crud_matriculas, name="crud_matriculas"),
     path('coordinador/matriculas/listar_matriculas/', views.listar_matriculas.as_view(), name="listar_matriculas"),

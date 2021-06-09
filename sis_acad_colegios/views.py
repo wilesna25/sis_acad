@@ -225,8 +225,8 @@ class crear_area(CreateView):
         self.form = AreasAsignaturasForm(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done', 'application/json')
-        return HttpResponse('error', 'application/json')
+            return HttpResponse('{ "status":"area creada" } ', 'application/json')
+        return HttpResponse('{ "status":"areada error creando" } ', 'application/json')
 
 class editar_area(UpdateView):
     model = AreasAsignaturas
@@ -238,8 +238,8 @@ class editar_area(UpdateView):
         self.form = AreasAsignaturasForm(request.POST, instance=area)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done', 'application/json')
-        return HttpResponse('error', 'application/json')
+            return HttpResponse('{ "status":"area editada" } ', 'application/json')
+        return HttpResponse('{ "status":"error editando" } ', 'application/json')
 
 class eliminar_areas(DeleteView):
     model = AreasAsignaturas
@@ -250,7 +250,7 @@ class eliminar_areas(DeleteView):
     def post(self, request, *args, **kwargs):
         area = self.get_query(request.POST['area_id'])
         area.delete()
-        return HttpResponse('drop', 'application/json')
+        return HttpResponse('{ "status":"area eliminada" } ', 'application/json')
 
 #ASIGNATURAS
 def crud_asignaturas(request):
@@ -285,11 +285,11 @@ class crear_asignaturas(CreateView):
         self.form = AsignaturaForm(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done','application/json')
+            return HttpResponse('{ "status":"asignatura creada" } ','application/json')
         else:
             err=self.form.errors
             print(err)
-            return HttpResponse(': '+err, 'application/json')
+            return HttpResponse('{ "status":"error creando asignatura borrado" } ', 'application/json')
 
 class editar_asignaturas(UpdateView):
     model = Asignaturas
@@ -300,7 +300,7 @@ class editar_asignaturas(UpdateView):
         self.form = AsignaturaForm(request.POST, instance=asignatura)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done','application/json')
+            return HttpResponse('{ "status":"asignatura  editada" } ','application/json')
         return HttpResponse('error', 'application/json')
 
 class eliminar_asignaturas(DeleteView):
@@ -312,7 +312,7 @@ class eliminar_asignaturas(DeleteView):
     def post(self, request, *args, **kwargs):
         asignatura = self.get_query(request.POST['asignatura_id'])
         asignatura.delete()
-        return HttpResponse('drop', 'application/json')
+        return HttpResponse('{ "status":"asignatura borrada" } ' , 'application/json')
 
 
 

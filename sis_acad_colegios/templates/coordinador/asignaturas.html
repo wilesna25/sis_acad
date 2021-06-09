@@ -100,6 +100,29 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 
     <script type="text/javascript">
+    function cargarDataTable(){
+            $('#tablaAsignaturas').DataTable().destroy();
+            var csrftoken = Cookies.get('csrftoken');
+            tablaAsignaturas = $('#tablaAsignaturas').DataTable({
+                    "responsive" : true,
+                    "autoWidth" : false,
+                    ajax:{
+                        "url": "listar_asignaturas/",
+                        "method": 'POST',
+                        "data":{'opcion':'opcidon'},
+                        "dataSrc":"",
+                        "headers": {'X-CSRFToken': '{{ csrf_token }}'},
+                    },
+                    "columns":[
+                        {"data": "id"},
+                        {"data": "asignatura"},
+                        {"data": "descripcion"},
+                        {"data": "area"},
+                        {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                    ]
+            });
+
+    }
        $(document).ready( function () {
             var csrftoken = Cookies.get('csrftoken');
             tablaAsignaturas = $('#tablaAsignaturas').DataTable({
@@ -143,8 +166,10 @@
                                 'area':area
                               },
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function(data) {
-                       }
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                     });
                 $('#modalCRUD').modal('hide');
             });
@@ -194,11 +219,10 @@
                       datatype:"json",
                       data:  {"asignatura_id":asignatura_id},
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function() {
-                          tablaAsignaturas.row(fila.parents('tr')).remove().draw();
-                          $('#tablaAsignaturas').draw();
-                          tablaAsignaturas.ajax.reload();
-                       }
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                     });
                 }
              });

@@ -41,7 +41,7 @@ urlpatterns = [
     #Grupos
     path('coordinador/grupos/', views.crud_grupos, name="crud_grupos"),
     path('coordinador/grupos/listar_grupos/', views.listar_grupos.as_view(), name="listar_grupos"),
-    #path('coordinador/grupos/crear_grupos/', views.crear_grupos.as_view(), name="crear_grupos"),
+    path('coordinador/grupos/crear_grupos/', views.crear_grupos.as_view(), name="crear_grupos"),
     path('coordinador/grupos/editar_grupos/', views.editar_grupos, name="editar_grupos"),
     path('coordinador/grupos/eliminar_grupos/', views.eliminar_grupos.as_view(), name="eliminar_grupos"),
     #Asignaturas

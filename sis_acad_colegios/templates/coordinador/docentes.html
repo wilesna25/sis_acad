@@ -225,10 +225,10 @@
                 console.log("test");
                 fila = $(this).closest("tr");
                 docente_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
-                asignatura_nombre = fila.find('td:eq(1)').text();
+                docente_nombre = fila.find('td:eq(1)').text();
                 console.log("id:::");
-                console.log(asignatura_id);
-                var respuesta = confirm("¿Está seguro de borrar el registro "+asignatura_nombre+"?");
+                console.log(docente_id);
+                var respuesta = confirm("¿Está seguro de borrar el registro "+docente_nombre+"?");
                 if (respuesta) {
                     $.ajax({
                       url: "eliminar_docente/",

@@ -131,6 +131,32 @@
 
     <script type="text/javascript">
       $(document).ready( function () {
+
+      function cargarDataTable(){
+            $('#tablaGrupos').DataTable().destroy();
+            var csrftoken = Cookies.get('csrftoken');
+            tablaGrupos = $('#tablaGrupos').DataTable({
+                    "responsive" : true,
+                    "autoWidth" : false,
+                    ajax:{
+                        "url": "listar_grupos/",
+                        "method": 'POST',
+                        "data":{'opcion':'opcidon'},
+                        "dataSrc":"",
+                        "headers": {'X-CSRFToken': '{{ csrf_token }}'},
+                    },
+                    "columns":[
+                        {"data": "id"},
+                        {"data": "grupo"},
+                        {"data": "grado"},
+                        {"data": "docente"},
+                        {"data": "jornada"},
+                        {"data": "sede"},
+                        {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                    ]
+            });
+
+      }
             var csrftoken = Cookies.get('csrftoken');
             tablaGrupos = $('#tablaGrupos').DataTable({
                     "responsive" : true,
@@ -180,8 +206,10 @@
                                 'sede': sede
                              },
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function(data) {
-                       }
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                     });
                 $('#modalCRUD').modal('hide');
             });
@@ -203,12 +231,10 @@
                 fila = $(this).closest("tr");
                 console.log("-----:..---");
                 console.log(fila.find('td:eq(1)').text());
-                asignatura_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
-                asinatura_nombre = fila.find('td:eq(1)').text();
-                descripcion = fila.find('td:eq(2)').text();
-                $("#asignatura").val(asinatura_nombre);
-                $("#descripcion").val(descripcion);
-                $("#asignatura_id").val(asignatura_id);
+                grupo_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
+                grupo = fila.find('td:eq(1)').text();
+                $("#grupo_id").val(grupo_id);
+                $("#grupo").val(grupo);
                 $(".modal-header").css("background-color", "#007bff");
                 $(".modal-header").css("color", "white" );
                 $(".modal-title").text("Editar Asignatura");
@@ -219,23 +245,20 @@
             $(document).on("click", ".btnBorrar", function(){
                 console.log("test");
                 fila = $(this).closest("tr");
-                asignatura_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
-                asignatura_nombre = fila.find('td:eq(1)').text();
-                console.log("id:::");
-                console.log(asignatura_id);
-                var respuesta = confirm("¿Está seguro de borrar el registro "+asignatura_nombre+"?");
+                grupo_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
+                grupo = fila.find('td:eq(1)').text();
+                var respuesta = confirm("¿Está seguro de borrar el registro "+grupo+"?");
                 if (respuesta) {
                     $.ajax({
-                      url: "eliminar_asignatura/",
+                      url: "eliminar_grupos/",
                       type: "POST",
                       datatype:"json",
-                      data:  {"asignatura_id":asignatura_id},
+                      data:  {"grupo_id":grupo_id},
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function() {
-                          tablaAsignaturas.row(fila.parents('tr')).remove().draw();
-                          $('#tablaAsignaturas').draw();
-                          tablaAsignaturas.ajax.reload();
-                       }
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                     });
                 }
              });

@@ -30,6 +30,8 @@ urlpatterns = [
     path('coordinador/matriculas/', views.crud_matriculas, name="crud_matriculas"),
     path('coordinador/matriculas/listar_matriculas/', views.listar_matriculas.as_view(), name="listar_matriculas"),
     path('coordinador/matriculas/crear_matriculas/', views.crear_matriculas.as_view(), name="crear_matriculas"),
+    path('coordinador/matriculas/eliminar_matriculas/', views.eliminar_matriculas, name="eliminar_matriculas"),
+    path('coordinador/matriculas/editar_matriculas/', views.editar_matriculas, name="editar_matriculas"),
     #Áreas asignaturas
     path('coordinador/areas/', views.crud_areas, name="crud_areas"),
     path('coordinador/areas/listar_areas/', views.listar_areas.as_view(), name="listar_areas"),
@@ -40,8 +42,8 @@ urlpatterns = [
     path('coordinador/grupos/', views.crud_grupos, name="crud_grupos"),
     path('coordinador/grupos/listar_grupos/', views.listar_grupos.as_view(), name="listar_grupos"),
     #path('coordinador/grupos/crear_grupos/', views.crear_grupos.as_view(), name="crear_grupos"),
-    #path('coordinador/grupos/editar_grupos/', views.editar_grupos.as_view(), name="editar_grupos"),
-   # path('coordinador/grupos/eliminar_grupos/', views.eliminar_grupos.as_view(), name="eliminar_grupos"),
+    path('coordinador/grupos/editar_grupos/', views.editar_grupos, name="editar_grupos"),
+    path('coordinador/grupos/eliminar_grupos/', views.eliminar_grupos.as_view(), name="eliminar_grupos"),
     #Asignaturas
     path('coordinador/asignaturas/', views.crud_asignaturas, name="crud_asignaturas"),
     path('coordinador/asignaturas/listar_asignaturas/', views.listar_asignaturas.as_view(), name="listar_asignaturas"),
@@ -52,8 +54,8 @@ urlpatterns = [
     path('coordinador/clases/', views.crud_clases, name="crud_clases"),
     path('coordinador/clases/listar_clases/', views.listar_clases.as_view(), name="listar_clases"),
     path('coordinador/clases/crear_clases/', views.crear_clases.as_view(), name="crear_clases"),
-    #path('coordinador/clases/editar_clases/', views.editar_clases.as_view(), name="editar_clases"),
-   # path('coordinador/clases/eliminar_clases/', views.eliminar_clases.as_view(), name="eliminar_clases"),
+    path('coordinador/clases/editar_clases/', views.editar_clases, name="editar_clases"),
+    path('coordinador/clases/eliminar_clases/', views.eliminar_clases, name="eliminar_clases"),
     #Periodos académicos
     path('coordinador/periodos_academicos/', views.crud_periodos_academicos, name="crud_periodos_academicos"),
     path('coordinador/asignaturas/listar_periodos_academicos', views.listar_periodos_academicos.as_view(), name="listar_periodos_academicos"),

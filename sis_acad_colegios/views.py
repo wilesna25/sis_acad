@@ -348,7 +348,6 @@ class listar_clases(ListView):
         data = json.dumps(lista_clases)
         return HttpResponse(data, 'application/json')
 
-
 class crear_clases(CreateView):
     model = Clases
     form = ClasesForm()
@@ -357,12 +356,29 @@ class crear_clases(CreateView):
         self.form = ClasesForm(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done', 'application/json')
+            return HttpResponse('{ "status":"clase creada" } ', 'application/json')
         else:
             err = self.form.errors
             print(err)
-            return HttpResponse(err, 'application/json')
+            return HttpResponse('{ "status":"clase error" } ', 'application/json')
 
+
+def editar_clases(request):
+    clase = Clases.objects.get(id=request.POST['clase_id'])
+    clase.clase = request.POST['clase']
+    clase.grupo = Grupos.objects.get(id=request.POST['grupo'])
+    clase.asignatura = Asignaturas.objects.get(id=request.POST['asignatura'])
+    clase.docente.user = User.objects.get(id=request.POST['docente'])
+    clase.save()
+    return HttpResponse('{ "status":"clase editada" } ', 'application/json')
+
+def eliminar_clases(request):
+    clase = Clases.objects.get(id=request.POST['clase_id'])
+    clase.delete()
+    return HttpResponse('{ "status":"clase eliminada" } ', 'application/json')
+
+
+#ESTUDIANTES
 def crud_estudiantes(request):
     context = {}
     return render(request, 'coordinador/estudiantes.html', context)
@@ -414,13 +430,32 @@ class crear_grupos(CreateView):
         print(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('done','application/json')
+            return HttpResponse('{ "status":"grupo creado" }','application/json')
         else:
             err=self.form.errors
             print(err)
-            return HttpResponse(err, 'application/json')
+            return HttpResponse({ "status":"error " }, 'application/json')
 
+class eliminar_grupos(DeleteView):
+    model = Grupos
 
+    def get_query(self, area_id):
+        return self.model.objects.get(id=area_id)
+
+    def post(self, request, *args, **kwargs):
+        area = self.get_query(request.POST['grupo_id'])
+        area.delete()
+        return HttpResponse('{ "status":"grupo eliminado" } ', 'application/json')
+
+def editar_grupos(request):
+    grupo =  Grupos.objects.get(id=request.POST['grupo_id'])
+    grupo.grupo = request.POST['grupo']
+    grupo.grado = GradosAcademicos.objects.get(id=request.POST['grado'])
+    #grupo.docente = (Docente) User.objects.get(id=request.POST['docente'])
+    grupo.jornada = Jornadas.objects.get(id=request.POST['jornada'])
+    grupo.sede = Sedes.objects.get(id=request.POST['sede'])
+    grupo.save()
+    return HttpResponse('{ "status":"grupo editado" } ','application/json')
 
 #Matrículas
 def crud_matriculas(request):
@@ -461,7 +496,6 @@ class crear_matriculas(CreateView):
 
     def post(self, request, *args, **kwargs):
         self.form = MatricularEstudianteForm(request.POST)
-        print(request.POST)
         if self.form.is_valid():
             self.form.save()
             return HttpResponse('estudiante creado', 'application/json')
@@ -470,6 +504,48 @@ class crear_matriculas(CreateView):
             print(err)
             return HttpResponse(err, 'application/json')
 
+
+def editar_matriculas(request):
+    estudiante = Estudiantes.objects.get(id=request.POST['id'])
+    estudiante.cod_estudiante = request.POST['cod_estudiante']
+    estudiante.nombres = request.POST['nombres']
+    estudiante.apellidos = request.POST['apellidos']
+    estudiante.fecha_nacimiento = request.POST['fecha_nacimiento']
+    estudiante.direccion = request.POST['direccion']
+    estudiante.telefono = request.POST['telefono']
+    estudiante.correo = request.POST['correo']
+    estudiante.save()
+    #crea matrícula
+    matricula = Matriculas.objects.get(estudiante=estudiante)
+    matricula.grupo = Grupos.objects.get(id=request.POST['grupo'])
+    matricula.save()
+    #crear Estudiante_por_Grupo
+    est_x_grupo = Estudiantes_por_Grupo.objects.create(estudiante=estudiante, grupo=matricula.grupo)
+    est_x_grupo.save()
+    return HttpResponse('{ "status":"estudiante editado" } ','application/json')
+
+
+
+def eliminar_matriculas(request):
+    estudiante = Estudiantes.objects.get(id=request.POST['estudiante_id'])
+    estudiante.delete()
+    return HttpResponse('{ "status":"estudiante borrado" } ','application/json')
+
+
+
+
+
+
+
+def editar_grupos(request):
+    grupo =  Grupos.objects.get(id=request.POST['grupo_id'])
+    grupo.grupo = request.POST['grupo']
+    grupo.grado = GradosAcademicos.objects.get(id=request.POST['grado'])
+    #grupo.docente = (Docente) User.objects.get(id=request.POST['docente'])
+    grupo.jornada = Jornadas.objects.get(id=request.POST['jornada'])
+    grupo.sede = Sedes.objects.get(id=request.POST['sede'])
+    grupo.save()
+    return HttpResponse('{ "status":"grupo editado" } ','application/json')
 
 #
 #DOCENTES VIEWS

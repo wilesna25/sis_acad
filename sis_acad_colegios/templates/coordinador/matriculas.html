@@ -52,7 +52,7 @@
                 <form id="formMatriculas">
                     <div class="row">
                         <div class="col-lg-6">
-                            <input  type="hidden" class="form-control" id="id_estudiante"/>
+                            <input  type="hidden" class="form-control" id="estudiante_id"/>
                             <div class="form-group">
                                 <label for="" class="col-form-label">
                                     Código estudiante
@@ -160,7 +160,39 @@
 
     <script type="text/javascript">
 
+
+
        $(document).ready( function () {
+
+           function cargarDataTable(){
+                $('#tablaMatriculas').DataTable().destroy();
+                var csrftoken = Cookies.get('csrftoken');
+                tablaMatriculas = $('#tablaMatriculas').DataTable({
+                        "responsive" : true,
+                        "autoWidth" : false,
+                        ajax:{
+                            "url": "listar_matriculas/",
+                            "method": 'POST',
+                            "data":{'opcion':'opcidon'},
+                            "dataSrc":"",
+                            "headers": {'X-CSRFToken': '{{ csrf_token }}'},
+                        },
+                        "columns":[
+                            {"data": "id"},
+                            {"data": "codigo_estudiante"},
+                            {"data": "nid"},
+                            {"data": "nombres"},
+                            {"data": "apellidos"},
+                            {"data": "fecha_nacimiento"},
+                            {"data": "direccion"},
+                            {"data": "telefono"},
+                            {"data": "correo"},
+                            {"data": "grupo"},
+                            {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                        ]
+                });
+            }
+
             var csrftoken = Cookies.get('csrftoken');
             tablaMatriculas = $('#tablaMatriculas').DataTable({
                     "responsive" : true,
@@ -195,7 +227,7 @@
                 }else{
                     url = 'editar_matriculas/';
                 }
-                id = $.trim($('#id_estudiante').val());
+                id = $.trim($('#estudiante_id').val());
                 codigo_estudiante = $.trim($('#codigo_estudiante').val());
                 nid = $.trim($('#nid').val());
                 nombres = $.trim($('#nombres_estudiante').val());
@@ -222,8 +254,10 @@
                                 'grupo':grupo
                               },
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function(data) {
-                       }
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                     });
                 $('#modalCRUD').modal('hide');
             });
@@ -245,15 +279,27 @@
                 fila = $(this).closest("tr");
                 console.log("-----:..---");
                 console.log(fila.find('td:eq(1)').text());
-                asignatura_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
-                asinatura_nombre = fila.find('td:eq(1)').text();
-                descripcion = fila.find('td:eq(2)').text();
-                $("#asignatura").val(asinatura_nombre);
-                $("#descripcion").val(descripcion);
-                $("#asignatura_id").val(asignatura_id);
+                estudiante_id = parseInt(fila.find('td:eq(0)').text()); //capturo el ID
+                codigo = fila.find('td:eq(1)').text();
+                nid = fila.find('td:eq(2)').text();
+                nombres = fila.find('td:eq(3)').text();
+                apellidos = fila.find('td:eq(4)').text();
+                fecha_nacimiento = fila.find('td:eq(5)').text();
+                direccion = fila.find('td:eq(6)').text();
+                telefono = fila.find('td:eq(7)').text();
+                correo = fila.find('td:eq(8)').text();
+                $("#codigo_estudiante").val(codigo);
+                $("#estudiante_id").val(estudiante_id);
+                $("#nombres_estudiante").val(nombres);
+                $("#apellidos_estudiante").val(apellidos);
+                $("#fecha_nacimiento").val(fecha_nacimiento);
+                $("#direccion").val(direccion);
+                $("#telefono").val(telefono);
+                $("#correo").val(correo);
+                $("#nid").val(nid);
                 $(".modal-header").css("background-color", "#007bff");
                 $(".modal-header").css("color", "white" );
-                $(".modal-title").text("Editar Asignatura");
+                $(".modal-title").text("Editar Matrícula");
                 $('#modalCRUD').modal('show');
             });
 
@@ -261,21 +307,20 @@
             $(document).on("click", ".btnBorrar", function(){
                 console.log("test");
                 fila = $(this).closest("tr");
-                asignatura_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
-                asignatura_nombre = fila.find('td:eq(1)').text();
-                var respuesta = confirm("¿Está seguro de borrar el registro "+asignatura_nombre+"?");
+                estudiante_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
+                estudiante_nombre = fila.find('td:eq(1)').text();
+                var respuesta = confirm("¿Está seguro de borrar el registro "+estudiante_nombre+"?");
                 if (respuesta) {
                     $.ajax({
-                      url: "eliminar_matricula/",
+                      url: "eliminar_matriculas/",
                       type: "POST",
                       datatype:"json",
-                      data:  {"id_estudiante":id_estudiante},
+                      data:  {"estudiante_id":estudiante_id},
                       headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                      success: function() {
-                          tablaMatriculas.row(fila.parents('tr')).remove().draw();
-                          $('#tablaMatriculas').draw();
-                          tablaMatriculas.ajax.reload();
-                       }
+                      success: function(result){
+                        alert(result.status);
+                        cargarDataTable();
+                       },
                     });
                 }
              });

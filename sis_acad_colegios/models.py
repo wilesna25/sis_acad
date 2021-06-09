@@ -144,14 +144,14 @@ class Estudiantes(models.Model):
 
 
 class Matriculas(models.Model):
-    estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
-    grupo = models.ForeignKey(Grupos, on_delete=models.DO_NOTHING, null=True)
+    estudiante = models.ForeignKey(Estudiantes, on_delete=models.CASCADE, null=True)
+    grupo = models.ForeignKey(Grupos, on_delete=models.CASCADE, null=True)
     fecha = models.DateField(default=date.today)
 
 
 class Estudiantes_por_Grupo(models.Model):
-    grupo = models.ForeignKey(Grupos, on_delete=models.DO_NOTHING, null=True)
-    estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    grupo = models.ForeignKey(Grupos, on_delete=models.CASCADE, null=True)
+    estudiante = models.ForeignKey(Estudiantes, on_delete=models.CASCADE, null=True)
 
 
 class FallasAsistencias(models.Model):

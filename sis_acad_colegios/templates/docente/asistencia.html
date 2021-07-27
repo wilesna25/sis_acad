@@ -20,11 +20,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="form-outline">
-                        <button type="submit" id="btnListarEstudiantes">Listar</button>
-                    </div>
-                </div>
         </div>
 
     <div class="container asistencias">
@@ -124,7 +119,7 @@
             var csrftoken = Cookies.get('csrftoken');
             var datatablefull = false;
 
-            $(document).on("click", "#btnListarEstudiantes", function(){
+            $(document).on("change", "#clases", function(){
                 clases_select_val = $("#clases").val();
                 if (clases_select_val.length != '' ){
                     if(datatablefull){ 

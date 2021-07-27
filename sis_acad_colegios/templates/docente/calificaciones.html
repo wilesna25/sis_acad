@@ -24,11 +24,6 @@
                     <div class="form-outline">
                     </div>
                 </div>
-            <div class="col-lg-4">
-                <div class="form-outline">
-                    <button type="submit" id="btnListarEstudiantes">Listar</button>
-                </div>
-            </div>
     </div>
     <div class="container asistencias">
         <div class="row">
@@ -113,7 +108,7 @@
        $(document).ready( function () {
             var csrftoken = Cookies.get('csrftoken');
 
-            $(document).on("click", "#btnListarEstudiantes", function(){
+            $(document).on("change", "#clases", function(){
                 clase = $.trim($('#clases').val());
                 if (clase.length != '' ){
                     $('#tablaCalificar').DataTable({

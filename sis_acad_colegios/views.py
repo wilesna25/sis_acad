@@ -1,7 +1,8 @@
 import json
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import logout
 from django.http import HttpResponse
 from .models import *
 from .forms import *
@@ -845,3 +846,8 @@ def listar_calificaciones_x_clase(request):
         return HttpResponse(data, 'application/json')
     except:
         return HttpResponse("unexpected error", 'application/json')
+
+def cerrar_sesion(request):
+    print("cerrando sesion....................")
+    logout(request)
+    return redirect("login")

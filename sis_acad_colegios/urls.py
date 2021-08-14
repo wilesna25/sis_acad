@@ -13,6 +13,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='login.html'), name="login"),
     path('logout/', LoginView.as_view(template_name='logout.html'), name="logout"),
     #COORDINADOR PATHS
+    #Cerrar Sesión
+    path('coordinador/cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
     #Sedes
     path('coordinador/sedes/', views.crud_sedes, name="crud_sedes"),
     path('coordinador/sedes/listar_sedes/', views.listar_sedes.as_view(), name="listar_sedes"),
@@ -67,6 +69,8 @@ urlpatterns = [
     #DOCENTE PATHS
     #------------------------------------------------------------------------------------------------------------------------------
 
+    #Cerrar Sesión
+    path('docente/cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
 
     #BOLETIN
     path('docente/ver_boletin/', views.ver_boletin, name="ver_boletin"),

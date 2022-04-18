@@ -20,3 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('sis_acad_colegios.urls'))
 ]
+
+admin.site.site_header = "INSTITUCIÓN EDUCATIVA COLOMBIA"

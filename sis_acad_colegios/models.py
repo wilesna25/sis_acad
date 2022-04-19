@@ -1,6 +1,8 @@
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
 from datetime import date
+from .manager import DocentesManager
 # Create your models here.
 
 
@@ -20,6 +22,7 @@ class Sedes(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class PeriodoAcademico(models.Model):
     periodo = models.CharField(max_length=200, null=True)
     fecha_inicio = models.DateField()
@@ -35,6 +38,7 @@ class Departamentos(models.Model):
     def __str__(self):
         return self.departamento
 
+
 class Ciudades(models.Model):
     ciudad = models.CharField(max_length=200)
 
@@ -42,7 +46,7 @@ class Ciudades(models.Model):
         return self.ciudad
 
 
-#class Niveles_academicos_docentes(models.Model):
+# class Niveles_academicos_docentes(models.Model):
   #  nivel_academico = models.CharField(max_length=200, null=True)
 #
    # def __str__(self):
@@ -73,28 +77,41 @@ class GradosAcademicos(models.Model):
     def __str__(self):
         return self.grado
 
+
 class LogrosAsignaturas(models.Model):
-    grado =  models.ForeignKey(GradosAcademicos,  on_delete=models.CASCADE)
+    grado = models.ForeignKey(GradosAcademicos,  on_delete=models.CASCADE)
     asignatura = models.ForeignKey(Asignaturas,  on_delete=models.CASCADE)
     nivel_desempeno = models.CharField(max_length=50)
     logro = models.CharField(max_length=500)
 
 
-class User(AbstractUser):
-    is_teacher = models.BooleanField(default=False)
-    is_student = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+# class User(AbstractUser):
+#     is_teacher = models.BooleanField(default=False)
+#     is_student = models.BooleanField(default=False)
+#     is_admin = models.BooleanField(default=False)
+#     first_name = models.CharField(max_length=100)
+#     last_name = models.CharField(max_length=100)
 
 
-class Docentes(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE, primary_key=True)
+class Docentes(AbstractUser):
+    #user = models.OneToOneField(User,on_delete=models.CASCADE, primary_key=True)
+    #username = None
+    email = models.EmailField(unique=True)
     dni = models.IntegerField(unique=True, null=True)
     direccion = models.CharField(max_length=200, null=True)
 
+    objects = DocentesManager()
+
+    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'email'
+
     def __str__(self):
-        return self.user.first_name
+        return self.email
+
+    class Meta:
+        db_table = "Docentes"
+        verbose_name = "Docente"
+        verbose_name_plural = "Docentes"
     #nombres = models.CharField(max_length=200, null=True)
     #apellidos = models.CharField(max_length=200, null=True)
   #  telefono  = models.IntegerField(null=True)
@@ -106,7 +123,7 @@ class Docentes(models.Model):
 
 
 class Grupos(models.Model):
-    grupo = models.CharField(max_length=200,null=True)
+    grupo = models.CharField(max_length=200, null=True)
     grado = models.ForeignKey(GradosAcademicos,  on_delete=models.CASCADE)
     docente = models.ForeignKey(Docentes, on_delete=models.CASCADE)
     jornada = models.ForeignKey(Jornadas, on_delete=models.CASCADE)
@@ -115,7 +132,9 @@ class Grupos(models.Model):
     def __str__(self):
         return self.grupo
 
-#asignacion academica
+# asignacion academica
+
+
 class Clases(models.Model):
     clase = models.CharField(max_length=200)
     grupo = models.ForeignKey(Grupos, on_delete=models.CASCADE)
@@ -132,8 +151,8 @@ class Estudiantes(models.Model):
     nombres = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200, null=True)
     direccion = models.CharField(max_length=200, null=True)
-    telefono  = models.IntegerField(null=True)
-    correo  = models.CharField(max_length=200, null=True)
+    telefono = models.IntegerField(null=True)
+    correo = models.CharField(max_length=200, null=True)
     fecha_nacimiento = models.DateField(null=True)
    # nombres_acudiente = models.CharField(max_length=200, null=True)
    # telefonos_acudiente = models.IntegerField()
@@ -144,26 +163,32 @@ class Estudiantes(models.Model):
 
 
 class Matriculas(models.Model):
-    estudiante = models.ForeignKey(Estudiantes, on_delete=models.CASCADE, null=True)
+    estudiante = models.ForeignKey(
+        Estudiantes, on_delete=models.CASCADE, null=True)
     grupo = models.ForeignKey(Grupos, on_delete=models.CASCADE, null=True)
     fecha = models.DateField(default=date.today)
 
 
 class Estudiantes_por_Grupo(models.Model):
     grupo = models.ForeignKey(Grupos, on_delete=models.CASCADE, null=True)
-    estudiante = models.ForeignKey(Estudiantes, on_delete=models.CASCADE, null=True)
+    estudiante = models.ForeignKey(
+        Estudiantes, on_delete=models.CASCADE, null=True)
 
 
 class FallasAsistencias(models.Model):
-    estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    estudiante = models.ForeignKey(
+        Estudiantes, on_delete=models.DO_NOTHING, null=True)
     clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
     justificada = models.BooleanField(default=False)
     observaciones = models.CharField(max_length=500, null=True)
     fecha = models.DateField(default=date.today)
 
+
 class Calificaciones(models.Model):
-    estudiante = models.ForeignKey(Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    estudiante = models.ForeignKey(
+        Estudiantes, on_delete=models.DO_NOTHING, null=True)
     clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
     periodo_academico = models.IntegerField(null=True)
     calificacion = models.FloatField(null=True)
     nivel_desempeno = models.CharField(max_length=50, null=True)
+

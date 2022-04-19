@@ -1,11 +1,17 @@
 import json
+from pyexpat.errors import messages
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+import sis_acad_colegios
 from .models import *
 from .forms import *
+from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponseRedirect
+
 
 # COORDINADOR VIEWS
 
@@ -555,7 +561,7 @@ def editar_grupos(request):
 #ASISTENCIAS
 def crud_asistencia(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
@@ -566,7 +572,7 @@ def crud_asistencia(request):
 
 def ver_asistencias(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
@@ -597,7 +603,7 @@ class listar_asistencias_estudiantes(ListView):
 #BOLETIN
 def ver_boletin(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
@@ -700,7 +706,7 @@ def ver_boletin_estudiante(request):
 #CALIFICACIONES
 def crud_calificaciones(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
@@ -711,7 +717,7 @@ def crud_calificaciones(request):
 def ver_calificaciones(request):
 
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(user_id=request.user.id))
+        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
@@ -851,3 +857,48 @@ def cerrar_sesion(request):
     print("cerrando sesion....................")
     logout(request)
     return redirect("login")
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                #messages.info(request, f"You are now logged in as {username}")
+                print("You are now logged in as {username}")
+                return redirect('crud_calificaciones')
+            else:
+                #messages.error(request, "Invalid username or password.")
+                print("Invalid username or password.")
+                return HttpResponse("auth " + username + " pass : " + password, 'application/json')
+        else:
+            messages.error(request, "Invalid username or password.")
+    form = AuthenticationForm()
+    return render(request = request,
+                    template_name = "login.html",
+                    context={"form":form})
+
+
+# def login_page(request):
+    
+#     if request.method == 'POST':
+#         username = request.POST.get("username")
+#         password = request.POST.get("password")
+
+
+#         user = authenticate(request, username=username, password=password, email=username)
+#         print("autenticandooooooooooooooooo")
+#         if user is not None:
+#             login(request, user)
+#             return redirect('crud_calificaciones')
+#         else:
+#             return HttpResponse("auth " + username + " pass : " + password, 'application/json')
+            
+    # return render(
+    #     request,
+    #     "login.html"
+    # )

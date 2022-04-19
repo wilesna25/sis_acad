@@ -22,9 +22,10 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4">
+
                         <div class="login-wrap p-0">
                             <h3 class="mb-4 text-center">Iniciar Sesión</h3>
-                            <form method="POST" class="signin-form">
+                            {% comment %} <form method="POST" class="signin-form">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label>Nombre de usuario</label>
@@ -37,6 +38,11 @@
                                 <div class="form-group">
                                     <button type="submit" class="form-control btn btn-primary rounded submit px-3">Iniciar Sesión</button>
                                 </div>
+                            </form> {% endcomment %}
+                            <form method="post" action="{% url 'login' %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                              <button name="submit">log in</button>
                             </form>
                         </div>
                     </div>

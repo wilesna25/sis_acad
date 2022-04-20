@@ -97,6 +97,7 @@ class Asignaturas(models.Model):
 class GradosAcademicos(models.Model):
     grado = models.CharField(max_length=200, null=True)
     descripcion = models.CharField(max_length=500, null=True)
+    sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.grado

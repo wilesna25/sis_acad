@@ -123,11 +123,14 @@
                 clases_select_val = $("#clases").val();
                 if (clases_select_val.length != '' ){
                     if(datatablefull){ 
-                        limpiarDataTable('tablaAsistencias');
+                        tablaAsistencias.destroy();
                     }
                     tablaAsistencias = $('#tablaAsistencias').DataTable({
                                 "responsive" : true,
                                 "autoWidth" : false,
+                                "initComplete": function () {
+                                    datatablefull = true;
+                                },
                         ajax:{
                             "url": "listar_estudiantes_x_clase/",
                             "method": 'POST',
@@ -143,27 +146,11 @@
                                 {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnReportar'><i class='material-icons'>Reportar</i></button></div></div>"}
                             ]
                         });
-                          $('#tablaAsistencias').DataTable( {
-                                "initComplete": function () {
-                                    datatablefull = true;
-                                }
-                            });
+
                 }else{
                     alert("Seleccione clase");
                     }
             });
-
-
-            function limpiarDataTable(tablename){
-                    try {
-                        datatable = $('#'+tablename);
-                        datatable.row(fila.parents('tr')).remove().draw();
-                        datatable.draw();
-                        datatable.ajax.reload();
-                    } catch (error) {
-                      console.error(error);
-                    }
-            }
 
             
             var fila; //captura la fila, para editar o eliminar/

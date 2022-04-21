@@ -33,7 +33,7 @@
                             <th>CÓDIGO_ESTUDIANTE</th>
                             <th>APELLIDOS ESTUDIANTE</th>
                             <th>NOMBRES ESTUDIANTE</th>
-                            <th>Justificada</th>
+                            <th>JUSTIFICADA</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,11 +58,14 @@
                 clases_select_val = $("#clases").val();
                 if (clases_select_val.length != '' ){
                     if(datatablefull){ 
-                        limpiarDataTable('tablaAsistencias');
+                        tablaAsistencias.destroy();
                     }
                     tablaAsistencias = $('#tablaAsistencias').DataTable({
                                 "responsive" : true,
                                 "autoWidth" : false,
+                                "initComplete": function () {
+                                    datatablefull = true;
+                                },
                         ajax:{
                             "url": "listar_fallas_asistencia_por_clase/",
                             "method": 'POST',
@@ -79,11 +82,6 @@
                                 {"data": "es_justificada"},
                             ]
                         });
-                          $('#tablaAsistencias').DataTable( {
-                                "initComplete": function () {
-                                    datatablefull = true;
-                                }
-                            });
                 }else{
                     alert("Seleccione clase");
                     }

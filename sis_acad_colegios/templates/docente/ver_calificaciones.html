@@ -58,9 +58,15 @@
             $(document).on("change", "#clases", function(){
                 clase = $("#clases").val();
                 if (clases.length != '' ){
+                    if(datatablefull){ 
+                        tablaCalificaciones.destroy();
+                    }
                     tablaCalificaciones = $('#tablaCalificaciones').DataTable({
                                 "responsive" : true,
                                 "autoWidth" : false,
+                                "initComplete": function () {
+                                    datatablefull = true;
+                                },
                         ajax:{
                             "url": "listar_calificaciones_x_clase/",
                             "method": 'POST',

@@ -88,9 +88,15 @@
             $(document).on("change", "#clases", function(){
                 clase = $("#clases").val();
                 if (clase.length != '' ){
+                    if(datatablefull){ 
+                        tablaBoletin.destroy();
+                    }
                     tablaBoletin = $('#tablaBoletin').DataTable({
                                 "responsive" : true,
                                 "autoWidth" : false,
+                                "initComplete": function () {
+                                    datatablefull = true;
+                                },
                         ajax:{
                             "url": "listar_estudiantes_x_clase/",
                             "method": 'POST',

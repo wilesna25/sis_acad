@@ -222,7 +222,7 @@ class ConceptosAcademicos(models.Model):
         PeriodoAcademico, on_delete=models.CASCADE, null=True)
     nota_maxima = models.IntegerField(null=True)
     nota_minima = models.IntegerField(null=True)
-    concepto_academico = models.CharField(null=True, max_length=500)
+    concepto_academico = models.CharField(null=True, max_length=40000)
     
     class Meta:
         verbose_name = "Concepto Académico"

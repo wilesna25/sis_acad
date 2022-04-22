@@ -5,6 +5,8 @@ from turtle import ondrag
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
 from datetime import date
+
+from django.forms import ValidationError
 from .manager import DocentesManager
 # Create your models here.
 
@@ -212,6 +214,13 @@ class Estudiantes_por_Grupo(models.Model):
         verbose_name = "Estudiante por grupo"
     verbose_name_plural = "Estudiantes por grupos"
 
+# creating a validator function
+def validate_notas_conceptos_academicos(value):
+    if value >0 and value <=5:
+        return value
+    else:
+        raise ValidationError("This field accepts mail id of google only")
+ 
 
 class ConceptosAcademicos(models.Model):
     grado_academico = models.ForeignKey(
@@ -220,8 +229,8 @@ class ConceptosAcademicos(models.Model):
         Asignaturas, on_delete=models.CASCADE, null=True)
     periodo_academico = models.ForeignKey(
         PeriodoAcademico, on_delete=models.CASCADE, null=True)
-    nota_maxima = models.IntegerField(null=True)
-    nota_minima = models.IntegerField(null=True)
+    nota_maxima = models.FloatField(null=True, validators=[validate_notas_conceptos_academicos])
+    nota_minima = models.FloatField(null=True, validators=[validate_notas_conceptos_academicos])
     concepto_academico = models.CharField(null=True, max_length=40000)
     
     class Meta:

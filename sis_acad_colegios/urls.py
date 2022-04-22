@@ -14,6 +14,7 @@ urlpatterns = [
     ##
     # path('login/', LoginView.as_view(template_name='login.html'), name="login"),
     #path('login/', views.login_page, name="login"),
+    path('/', views.login_view, name="login"),
     path('login/', views.login_view, name="login"),
     # path('logout/', LoginView.as_view(template_name='logout.html'), name="logout"),
     # COORDINADOR PATHS

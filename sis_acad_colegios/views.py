@@ -627,7 +627,7 @@ def mostrar_boletin_estudiante(request):
         'estudiante_nombre': estudiante.apellidos + "  " + estudiante.nombres,
         'estudiante_jornada': jornada,
         'estudiante_grado' : grado,
-        'estudiante_sede' : sede,
+        'estudiante_sede' : sede.upper(),
         'calificaciones' : calificaciones
     }
     return render(request, 'docente/boletin_estudiante.html', context)
@@ -646,7 +646,7 @@ def obtener_clases_calificadas_por_estudiante(estudiante, grado):
         calificacion_data['periodo'] = calificada.periodo_academico
         calificacion_data['nivel'] = calificada.nivel_desempeno
         calificacion_data['calificacion'] = calificada.calificacion
-        calificacion_data['docente'] = calificada.clase.docente.user.last_name + " " + calificada.clase.docente.user.first_name
+        calificacion_data['docente'] = calificada.clase.docente.last_name + " " + calificada.clase.docente.first_name
         calificacion_data['inasistencias'] = FallasAsistencias.objects.filter(estudiante=estudiante, clase=calificada.clase).count()
         calificacion_data['logros'] = obtener_logros_x_asignatura_grado(grado, calificada.clase.asignatura, calificacion_data['nivel'] )
         calificaciones.append(calificacion_data)

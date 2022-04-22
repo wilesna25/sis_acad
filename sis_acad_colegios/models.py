@@ -243,7 +243,7 @@ class FallasAsistencias(models.Model):
 
 class Calificaciones(models.Model):
     estudiante = models.ForeignKey(
-        Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    Estudiantes, on_delete=models.DO_NOTHING, null=True)
     clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
     periodo_academico = models.IntegerField(null=True)
     calificacion = models.FloatField(null=True)
@@ -252,3 +252,6 @@ class Calificaciones(models.Model):
     class Meta:
         verbose_name = "Calificación"
         verbose_name_plural = "Calificaciones"
+
+    def __str__(self):
+        return  self.clase.clase + " - " + self.estudiante.apellidos + " ===  " + str(self.calificacion);

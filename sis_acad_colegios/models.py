@@ -236,6 +236,9 @@ class ConceptosAcademicos(models.Model):
     class Meta:
         verbose_name = "Concepto Académico"
         verbose_name_plural = "Conceptos académicos"
+    
+    def __str__(self):
+        return self.concepto_academico
 
 class FallasAsistencias(models.Model):
     estudiante = models.ForeignKey(

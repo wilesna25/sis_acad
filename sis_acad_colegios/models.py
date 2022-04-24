@@ -243,3 +243,58 @@ class Calificaciones(models.Model):
 
     def __str__(self):
         return  self.clase.clase + " - " + self.estudiante.apellidos + " ===  " + str(self.calificacion);
+
+
+
+class CalificacionesPeriodoAcademico(models.Model):
+    
+    estudiante = models.ForeignKey(
+    Estudiantes, on_delete=models.DO_NOTHING, null=True)
+
+    clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
+    periodo_academico = models.IntegerField(null=True)
+
+    #zona para las 7 calificaciones que agrega el docente
+    calificacion_1 = models.FloatField(null=True)
+    calificacion_2 = models.FloatField(null=True)
+    calificacion_3 = models.FloatField(null=True)
+    calificacion_4 = models.FloatField(null=True)
+    calificacion_5 = models.FloatField(null=True)
+    calificacion_6 = models.FloatField(null=True)
+    calificacion_7 = models.FloatField(null=True)
+
+    #heteroevaluación : nota calculada con el promedio de las 7 calificaciones anteriores
+    heteroevaluacion = models.FloatField(null=True)
+    #examen bimestral
+    examenBimestral = models.FloatField(null=True)
+    #autoevaluacion
+    autoevaluacion = models.FloatField(null=True)
+    #coevaluacion
+    coevaluacion = models.FloatField(null=True)
+
+    class Meta:
+        verbose_name = "Calificación"
+        verbose_name_plural = "Calificaciones"
+
+    def __str__(self):
+        return  self.clase.clase + " - " + self.estudiante.apellidos + " ===  " + str(self.calificacion);
+
+
+
+class CalificacionesFinalesPeriodosAcademicos(models.Model):
+
+    estudiante = models.ForeignKey(Estudiantes, on_delete=models.CASCADE, null=True)
+    clase = models.ForeignKey(Clases, on_delete=models.CASCADE, null=True)
+    periodoAcademico = models.ForeignKey(PeriodoAcademico, on_delete=models.DO_NOTHING, null=True)
+    calificacionFinal = models.FloatField(null=True)
+    nivelDesempeno = models.CharField(max_length=50, null=True)
+
+    class Meta:
+        verbose_name = "Calificacion final periodo académico."
+        verbose_name_plural = "Calificaiones finales periodo académico"
+
+    def __str__(self):
+        if self.estudiante is not None:
+            return self.calificacionFinal + " " + self.estudiante.apellidos 
+
+

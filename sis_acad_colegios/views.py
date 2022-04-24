@@ -622,20 +622,43 @@ def mostrar_boletin_estudiante(request):
     grado = grupo.grado.grado
     jornada = grupo.jornada.jornada
     calificaciones = obtener_clases_calificadas_por_estudiante(estudiante, grupo.grado)
+
+    
+    conceptosAcademicos = _obtener_conceptos_academicos(grupo.grado, estudiante)
+
     #print(calificaciones[0]['area_asignatura'])
     context = {
         'estudiante_nombre': estudiante.apellidos + "  " + estudiante.nombres,
         'estudiante_jornada': jornada,
         'estudiante_grado' : grado,
         'estudiante_sede' : sede.upper(),
-        'calificaciones' : calificaciones
+        'calificaciones' : calificaciones,
+        'conceptosAcademicos' : conceptosAcademicos
     }
     return render(request, 'docente/boletin_estudiante.html', context)
 
 
 
+def _obtener_conceptos_academicos(grado, estudiante):
+    conceptosAcademicos = []
+    clases_calificadas = Calificaciones.objects.filter(estudiante=estudiante)
+    print("calificacionessss ")
+    for calificada in clases_calificadas:
+        conceptosAcademicosAsignatura = {}
+        conceptosAcademicosAsignatura['asignatura'] = calificada.clase.asignatura.asignatura
+        conceptosAcademicosAsignatura['calificacion'] = calificada.calificacion
+        conceptosAcademicosAsignatura['nivelDesempeno'] = calificada.nivel_desempeno
+        conceptosAcademicosAsignatura['conceptosAcademicos'] = obtener_conceptos_academicos(grado, calificada.clase.asignatura)
+        #concepto_academico = obtener_conceptos_academicos(grado, calificada.clase.asignatura)
+        conceptosAcademicos.append(conceptosAcademicosAsignatura)
+    
+    return conceptosAcademicos
+
+
+
 def obtener_fallas_asistencias_estudiate_clase():
     pass
+
 
 def obtener_clases_calificadas_por_estudiante(estudiante, grado):
     calificaciones = []
@@ -648,7 +671,7 @@ def obtener_clases_calificadas_por_estudiante(estudiante, grado):
         calificacion_data['calificacion'] = calificada.calificacion
         calificacion_data['docente'] = calificada.clase.docente.last_name + " " + calificada.clase.docente.first_name
         calificacion_data['inasistencias'] = FallasAsistencias.objects.filter(estudiante=estudiante, clase=calificada.clase).count()
-        calificacion_data['logros'] = obtener_logros_x_asignatura_grado(grado, calificada.clase.asignatura, calificacion_data['nivel'] )
+        #calificacion_data['logros'] = obtener_logros_x_asignatura_grado(grado, calificada.clase.asignatura, calificacion_data['nivel'] )
         calificaciones.append(calificacion_data)
     return  calificaciones
 
@@ -661,11 +684,26 @@ def obtener_logros_x_asignatura_grado(grado, asignatura, nivel_desempeno):
     return logros
 
 
-def obtener_calificaciones(estudiante):
-    calificaciones = []
-    calificacion_data = {}
-    #calificacion_data['area_asignatura']
-    pass
+def obtener_conceptos_academicos(grado, asignatura):
+    # try:
+    #     auxPeriodoAcademico = PeriodoAcademico.objects.filter(periodo='PRIMER_PERIODO_ACADEMICO')
+    #     conceptosAcademicos = ConceptosAcademicos.objects.filter(grado=grado, asignatura=asignatura, periodo_academico=auxPeriodoAcademico)
+    #     print("WOOOOORKKSSS")
+    # except:
+    #     print("ERROOOOOOOOOR")
+    #     conceptosAcademicos = None
+    auxPeriodoAcademico = PeriodoAcademico.objects.get(periodo='PRIMER_PERIODO_ACADEMICO')
+    print("auxPeriodoAcademico")
+    print(auxPeriodoAcademico.periodo)
+    print("auxPeriodoAcademico 2")
+    conceptosAcademicos = ConceptosAcademicos.objects.filter(grado_academico=grado, asignaturas=asignatura, periodo_academico=auxPeriodoAcademico)
+    # print("conceptoAcademico = ")
+    # print(conceptosAcademicos[0].concepto_academico)
+    # print("fin conceptoAcademico")
+    # print("")
+    
+    return conceptosAcademicos
+
 
 def obtener_calificacion_area_asignatura():
     pass
@@ -824,13 +862,13 @@ def guardar_calificacion(request):
         return HttpResponse("error", 'application/json')
 
 def obtener_nivel_desempeno_calificacion(calificacion):
-    nivel = 'Superior'
+    nivel = 'SUPERIOR'
     if calificacion <=2.9:
-        nivel = 'Bajo'
+        nivel = 'BAJO'
     elif    calificacion >= 3 and calificacion <= 3.9:
-        nivel = 'Basico'
+        nivel = 'BASICO'
     elif    calificacion >= 4 and calificacion <=4.5:
-        nivel = 'Alto'
+        nivel = 'ALTO'
     return nivel
 
 def listar_calificaciones_x_clase(request):

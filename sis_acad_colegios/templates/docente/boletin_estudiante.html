@@ -35,7 +35,7 @@
             .header_conceptos_academicos{
                 background: #E0DBDA;
             }
-
+            
             th, td {
                 padding: 3px;
               }
@@ -54,6 +54,11 @@
               tfoot th {
                 text-align: right;
               }
+
+            .conceptos_academicos{
+                text-align: left;
+            }
+
         </style>
     </head>
     
@@ -165,64 +170,50 @@
 
 
                 <h2 class="header_informe_detallado">INFORME DETALLADO</h2>
-   
-            {% for o in calificaciones %}
+
+
+            {% for conceptoAcademico in conceptosAcademicos %}
 
                 <table>
                         <tr class="header_conceptos_academicos" >
                     
-                            <th> CIENCIAS SOCIALES </th>
+                            <th> {{ conceptoAcademico.asignatura }} </th>
                         
                             <th>DESEMPEÑO</th>
                         
-                            <th> 3.4 </th>
+                            <th> {{ conceptoAcademico.calificacion }} </th>
                         
-                            <th>BÁSICO</th>
+                            <th>{{ conceptoAcademico.nivelDesempeno }} </th>
                     
                         </tr>
 
                         <tr>
 
-                            <th class="header_conceptos_academicos" colspan="4">INDICADORES DE DESEMPEÑO</th>
+                            <th class="header_conceptos_academicos" colspan="4">
+                                INDICADORES DE DESEMPEÑO
+                            </th>
                     
                         </tr>
                     <tbody>
+
+                        {% for conceptos in conceptoAcademico.conceptosAcademicos %}
                         <tr>
-                            <td>
-                                1
+                            <td class="conceptos_academicos">
+                                {{ conceptos.concepto_academico }}
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                        </tr>
+                        {% endfor%}
+
                         
                     </tbody> 
                     
                     <tfoot>
                         <tr>
-                        <td>Fortaleza</td>
+                        <td> 
+                            <strong>
+                                Fortaleza
+                            </strong>
+                        </td>
                         <td>Da el máximo rendimiento de acuerdo a sus capacidades</td>
                         </tr>
                     </tfoot>  
@@ -237,7 +228,7 @@
 
 
                     {% comment %} ESTADO ACADÉMICO FINAL {% endcomment %}
-            <br><br>
+            {% comment %} <br><br>
 
                 <table class="tbl_conceptos_academicos" border="1">
                     <tr>
@@ -248,7 +239,7 @@
                         <td>APROBO[]</td>
                         <td>#promedio</td>
                     </tr>
-                </table>
+                </table> {% endcomment %}
                 
             </div>
     </center>

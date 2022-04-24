@@ -49,28 +49,6 @@ class PeriodoAcademico(models.Model):
         verbose_name_plural = "Periodos Académicos"
 
 
-class Departamentos(models.Model):
-    departamento = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.departamento
-
-    class Meta:
-        verbose_name = "Departamento"
-        verbose_name_plural = "Departamentos"
-
-
-class Ciudades(models.Model):
-    ciudad = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.ciudad
-
-    class Meta:
-        verbose_name = "Ciudad"
-        verbose_name_plural = "Ciudades"
-
-
 class AreasAsignaturas(models.Model):
     area = models.CharField(max_length=200, null=True)
     descripcion = models.CharField(max_length=500, null=True)
@@ -118,8 +96,6 @@ class LogrosAsignaturas(models.Model):
     class Meta:
         verbose_name = "Logro Asignatura"
         verbose_name_plural = "Logros Asignaturas"
-
-
 
 
 class Docentes(AbstractUser):

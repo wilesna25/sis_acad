@@ -4,10 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import *
 
-#admin.site.register(User)
-#admin.site.register(Departamentos)
 admin.site.register(Grupos)
-#admin.site.register(Ciudades)
 admin.site.register(Asignaturas)
 admin.site.register(Jornadas)
 admin.site.register(Estudiantes)

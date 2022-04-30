@@ -249,10 +249,10 @@ class Calificaciones(models.Model):
 class CalificacionesPeriodoAcademico(models.Model):
     
     estudiante = models.ForeignKey(
-    Estudiantes, on_delete=models.DO_NOTHING, null=True)
+    Estudiantes, on_delete=models.CASCADE, null=True)
 
-    clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
-    periodo_academico = models.ForeignKey(PeriodoAcademico, on_delete=models.DO_NOTHING, null=True)
+    clase = models.ForeignKey(Clases, on_delete=models.CASCADE, null=True)
+    periodo_academico = models.ForeignKey(PeriodoAcademico, on_delete=models.CASCADE, null=True)
 
     #zona para las 7 calificaciones que agrega el docente
     calificacion_1 = models.FloatField(null=True)

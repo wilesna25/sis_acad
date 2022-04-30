@@ -29,6 +29,7 @@
                 <table id="tablaCalificaciones" class="table table-striped table-bordered table-condensed" style="width:100%">
                 <thead class="text-center">
                     <tr>
+                        <th>ID</th>
                         <th>CÓDIGO_ESTUDIANTE</th>
                         <th>ESTUDIANTE</th>
                         <th>GRUPO</th>
@@ -85,6 +86,7 @@
                         "headers": {'X-CSRFToken': '{{ csrf_token }}'},
                     },
                         "columns":[
+                            {"data": "id_cal"},
                             {"data": "codigo_estudiante"},
                             {"data": "estudiante"},
                             {"data": "grupo"},
@@ -103,33 +105,73 @@
                             {"data": "co_eva"},                                
                             {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-danger btn-sm btnEliminar'><i class='material-icons'>Eliminar</i></button></div></div>"}
                         ]
-                    });
+                    }).column( 1 ).visible( false );
             }else{
                 alert("Seleccione clase");
                 }
         });
 
+
         $(document).on("click", ".btnEliminar", function(){
-            console.log("test");
+
+
             fila = $(this).closest("tr");
-            docente_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
-            docente_nombre = fila.find('td:eq(1)').text();
-            console.log("id:::");
-            console.log(docente_id);
-            var respuesta = confirm("¿Está seguro de borrar el registro "+docente_nombre+"?");
-            if (respuesta) {
+            cal_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
+
+            estudiante_nombre = fila.find('td:eq(1)').text();
+
+
+            swal({
+                title: "Eliminar Calificación",
+                text: "¿Está seguro de borrar la calificacion para el(la) estudiante "+cal_id+"?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+            .then((willDelete) => {
+
+                if (willDelete) {
+
+                    $.ajax({
+                        url: "eliminar_calificacion_periodo_academico/",
+                        type: "POST",
+                        datatype:"json",
+                        data:  {"cal_id":cal_id},
+                        headers : {'X-CSRFToken': '{{ csrf_token }}'},
+                        success: function(result){
+                            //alert("función exitosa");
+                            //reload dataTable()
+                            swal("Calificación eliminada exitosamente ");
+                        }
+                    }); 
+
+                  swal("Calificación eliminada del sistema.", {
+                    icon: "success",
+                  });
+                } else {
+                  swal("No se ha eliminado ninguna calificación.");
+                }
+
+            });
+
+
+
+
+            {% comment %} console.log("test"); {% endcomment %}
+            {% comment %} var respuesta = confirm("¿Está seguro de borrar la calificacion para el(la) estudiante "+estudiante_nombre+"?"); {% endcomment %}
+            {% comment %} if (respuesta) {
                 $.ajax({
                   url: "eliminar_calificacion_periodo_academico/",
                   type: "POST",
                   datatype:"json",
-                  data:  {"docente_id":docente_id},
+                  data:  {"cal_id":cal_id},
                   headers : {'X-CSRFToken': '{{ csrf_token }}'},
                   success: function(result){
                     alert(result.status);
                     cargarDataTable();
                    }
                 });
-            }
+            } {% endcomment %}
          });
 
 

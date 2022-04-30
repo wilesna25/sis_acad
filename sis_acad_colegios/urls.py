@@ -136,8 +136,19 @@ urlpatterns = [
          views.guardar_calificacion, name="guardar_calificacion"),
     path('docente/calificaciones/listar_calificaciones_x_clase/',
          views.listar_calificaciones_x_clase, name="listar_calificaciones_x_clase"),
+
+
+
     path('docente/ver_calificaciones/',
          views.ver_calificaciones, name="ver_calificaciones"),
+
+     path('docente/ver_calificaciones/eliminar_calificacion_periodo_academico/',
+     views.eliminar_calificacion_periodo_academico, name="eliminar_calificacion_periodo_academico"),
+
+
+
+    path('docente/ver_calificaciones/eliminar_calificacion_periodo_academico/',
+         views.eliminar_calificacion_periodo_academico, name="eliminar_calificacion_periodo_academico"),
     path('docente/ver_calificaciones_finales/',
          views.ver_calificaciones_finales, name="ver_calificaciones_finales"),
     path('docente/ver_calificaciones_finales/listar_calificaciones_finales_x_clase/',
@@ -150,17 +161,12 @@ urlpatterns = [
          views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
 
 
-
-
-
     # CalificacionesPeriodoAcademico
     path('docente/calificaciones_periodo_academico/',
          views.calificacionesPeriodoAcademico, name="calificaciones_periodo_academico"),
          
     path('docente/calificaciones_periodo_academico/listar_estudiantes_x_clase/',
          views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
-
-
 
 
     path('coordinador/asignaturas/listar_asistencias_estudiantes',

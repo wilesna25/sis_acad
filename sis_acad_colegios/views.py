@@ -982,6 +982,7 @@ def listar_calificaciones_x_clase(request):
     calificaciones = CalificacionesPeriodoAcademico.objects.filter(clase=clase)
     for calificacion in calificaciones:
         calificaciones_data = {}
+        calificaciones_data['id_cal'] = calificacion.id
         calificaciones_data['codigo_estudiante'] = calificacion.estudiante.cod_estudiante
         calificaciones_data['estudiante'] = calificacion.estudiante.apellidos + \
             " " + calificacion.estudiante.nombres
@@ -1181,3 +1182,22 @@ def obtener_nivel_desempeno_calificacion(calificacion):
     elif calificacion >= 4 and calificacion <= 4.5:
         nivel = 'ALTO'
     return nivel
+
+
+def eliminar_calificacion_periodo_academico(request):
+    response = None;
+
+    print("id calificacion ::::::::::::::::: ")
+    print(request.POST.get('cal_id'))
+    print("id calificacion ::::::::::::::::: ")
+
+    calificacionPeriodo = CalificacionesPeriodoAcademico.objects.get(id=request.POST['cal_id'])
+    calificacionPeriodo.delete()
+
+    if request.method == 'POST':
+
+        response = {
+            'data_cal_id' :request.POST.get('cal_id')
+        }
+
+        return HttpResponse(response, 'application/json')

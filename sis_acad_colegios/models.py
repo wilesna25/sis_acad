@@ -252,7 +252,7 @@ class CalificacionesPeriodoAcademico(models.Model):
     Estudiantes, on_delete=models.DO_NOTHING, null=True)
 
     clase = models.ForeignKey(Clases, on_delete=models.DO_NOTHING, null=True)
-    periodo_academico = models.IntegerField(null=True)
+    periodo_academico = models.ForeignKey(PeriodoAcademico, on_delete=models.DO_NOTHING, null=True)
 
     #zona para las 7 calificaciones que agrega el docente
     calificacion_1 = models.FloatField(null=True)
@@ -277,7 +277,7 @@ class CalificacionesPeriodoAcademico(models.Model):
         verbose_name_plural = "Calificaciones"
 
     def __str__(self):
-        return  self.clase.clase + " - " + self.estudiante.apellidos + " ===  " + str(self.calificacion);
+        return  self.clase.clase + " - " + self.estudiante.apellidos ;
 
 
 
@@ -295,6 +295,6 @@ class CalificacionesFinalesPeriodosAcademicos(models.Model):
 
     def __str__(self):
         if self.estudiante is not None:
-            return self.calificacionFinal + " " + self.estudiante.apellidos 
+            return str(self.calificacionFinal) + " " + self.estudiante.apellidos 
 
 

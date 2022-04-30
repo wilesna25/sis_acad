@@ -149,12 +149,17 @@
                 estudiante_codigo = fila.find('td:eq(1)').text();
                 apellidos = fila.find('td:eq(2)').text();
                 nombres = fila.find('td:eq(3)').text();
+                est_nomb = apellidos + ' ' + nombres
+
+                location.href='{% url 'calificaciones_periodo_academico' %}?est_id=' + estudiante_id + '&clas_id=' + $("#clases").val() + '&est_nom=' + est_nomb + '&clas_nom=' + $("#clases option:selected").text().split("-")[0]
+
+                {% comment %}
                 $("#estudiante_codigo").val(estudiante_codigo);
-                $("#estudiante_nombres").val(apellidos + ' ' + nombres);
                 $(".modal-header").css("background-color", "#007bff");
                 $(".modal-header").css("color", "white" );
                 $(".modal-title").text("Reportar Inasistencia");
-                $('#modalCRUD').modal('show');
+                $('#modalCRUD').modal('show'); 
+                {% endcomment %}
             });
 
 

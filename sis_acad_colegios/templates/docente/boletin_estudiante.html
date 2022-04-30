@@ -162,10 +162,10 @@
                             <th>1.0</th>
                         </tr>
 
-                        <tr>
+                        {% comment %} <tr>
                             <th>PUESTO</th>
                             <th>3</th>
-                        </tr>
+                        </tr> {% endcomment %}
 
                     </tfoot>
 
@@ -203,6 +203,7 @@
                     <tbody>
 
                         {% for conceptos in conceptoAcademico.conceptosAcademicos %}
+
                         <tr>
                             <td class="conceptos_academicos">
                                 {{ conceptos.concepto_academico }}

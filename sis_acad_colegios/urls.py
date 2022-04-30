@@ -138,12 +138,30 @@ urlpatterns = [
          views.listar_calificaciones_x_clase, name="listar_calificaciones_x_clase"),
     path('docente/ver_calificaciones/',
          views.ver_calificaciones, name="ver_calificaciones"),
+    path('docente/ver_calificaciones_finales/',
+         views.ver_calificaciones_finales, name="ver_calificaciones_finales"),
+    path('docente/ver_calificaciones_finales/listar_calificaciones_finales_x_clase/',
+         views.listar_calificaciones_finales_x_clase, name="listar_calificaciones_finales_x_clase"),
     path('docente/ver_calificaciones/listar_calificaciones_x_clase/',
          views.listar_calificaciones_x_clase, name="listar_calificaciones_x_clase"),
 
     # GestionEstudiantes
     path('docente/asistencias/listar_estudiantes_x_clase/',
          views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
+
+
+
+
+
+    # CalificacionesPeriodoAcademico
+    path('docente/calificaciones_periodo_academico/',
+         views.calificacionesPeriodoAcademico, name="calificaciones_periodo_academico"),
+         
+    path('docente/calificaciones_periodo_academico/listar_estudiantes_x_clase/',
+         views.listar_estudiantes_x_clase.as_view(), name="listar_estudiantes_x_clase"),
+
+
+
 
     path('coordinador/asignaturas/listar_asistencias_estudiantes',
          views.listar_asistencias_estudiantes.as_view(), name="listar_asistencias_estudiantes"),

@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         {% load static %}
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
      </head>
   <body>
 
@@ -33,6 +34,9 @@
               </li>
               <li>
                   <a href="{% url 'ver_calificaciones' %}"><span class="fa fa-user mr-3"></span> Ver Calificaciones </a>
+              </li>
+              <li>
+                  <a href="{% url 'ver_calificaciones_finales' %}"><span class="fa fa-user mr-3"></span> Ver Calificaciones Finales </a>
               </li>
               <li>
                   <a href="{% url 'ver_boletin' %}"><span class="fa fa-user mr-3"></span> Boletín </a>

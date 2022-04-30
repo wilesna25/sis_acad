@@ -6,19 +6,21 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 import sis_acad_colegios
 from .models import *
 from .forms import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
-
+from django.db import transaction
 
 # COORDINADOR VIEWS
 
-#Sedes
+# Sedes
 def crud_sedes(request):
     context = {}
     return render(request, 'coordinador/sedes.html', context)
+
 
 class listar_sedes(ListView):
     model = Sedes
@@ -74,12 +76,14 @@ class eliminar_sedes(DeleteView):
         asignatura = self.get_query(request.POST['id'])
         asignatura.delete()
         return HttpResponse(' {"status":"registro borrado"}', 'application/json')
- 
-#PERIODOS ACADÉMICOS
+
+# PERIODOS ACADÉMICOS
+
 
 def crud_periodos_academicos(request):
     context = {}
     return render(request, 'coordinador/periodos_academicos.html', context)
+
 
 class listar_periodos_academicos(ListView):
     model = Sedes
@@ -136,7 +140,9 @@ class eliminar_periodos_academicos(DeleteView):
         asignatura.delete()
         return HttpResponse('drop', 'application/json')
 
-#DOCENTES
+# DOCENTES
+
+
 class listar_docentes(ListView):
     model = Docentes
 
@@ -166,8 +172,9 @@ class listar_docentes(ListView):
         data = json.dumps(lista_docentes)
         return HttpResponse(data, 'application/json')
 
+
 def crud_docentes(request):
-    context = {'form':DocenteRegistroForm}
+    context = {'form': DocenteRegistroForm}
     return render(request, 'coordinador/docentes.html', context)
 
 
@@ -181,8 +188,8 @@ class registrar_docente(CreateView):
             self.form.save()
             return HttpResponse('{ "status":"docente creado" } ', 'application/json')
         else:
-            err=self.form.errors
-            return HttpResponse('{ "status":"error creando docente ' +err+'" } ', 'application/json')
+            err = self.form.errors
+            return HttpResponse('{ "status":"error creando docente ' + err+'" } ', 'application/json')
 
 
 def editar_docente(request):
@@ -198,11 +205,14 @@ def editar_docente(request):
 
 
 def eliminar_docente(request):
-    docente = Docentes.objects.get(user=User.objects.get(id=request.POST['docente_id']))
+    docente = Docentes.objects.get(
+        user=User.objects.get(id=request.POST['docente_id']))
     docente.delete()
     return HttpResponse('{ "status":"docente borrado" } ', 'application/json')
 
-#ÁREAS
+# ÁREAS
+
+
 class listar_areas(ListView):
     model = AreasAsignaturas
 
@@ -220,9 +230,11 @@ class listar_areas(ListView):
         data = json.dumps(lista_areas)
         return HttpResponse(data, 'application/json')
 
+
 def crud_areas(request):
     context = {}
     return render(request, 'coordinador/areas.html', context)
+
 
 class crear_area(CreateView):
     model = AreasAsignaturas
@@ -234,6 +246,7 @@ class crear_area(CreateView):
             self.form.save()
             return HttpResponse('{ "status":"area creada" } ', 'application/json')
         return HttpResponse('{ "status":"areada error creando" } ', 'application/json')
+
 
 class editar_area(UpdateView):
     model = AreasAsignaturas
@@ -248,6 +261,7 @@ class editar_area(UpdateView):
             return HttpResponse('{ "status":"area editada" } ', 'application/json')
         return HttpResponse('{ "status":"error editando" } ', 'application/json')
 
+
 class eliminar_areas(DeleteView):
     model = AreasAsignaturas
 
@@ -259,29 +273,32 @@ class eliminar_areas(DeleteView):
         area.delete()
         return HttpResponse('{ "status":"area eliminada" } ', 'application/json')
 
-#ASIGNATURAS
+# ASIGNATURAS
+
+
 def crud_asignaturas(request):
     areas = AreasAsignaturas.objects.all()
-    context = { 'areas' : areas }
+    context = {'areas': areas}
     return render(request, 'coordinador/asignaturas.html', context)
+
 
 class listar_asignaturas(ListView):
     model = Asignaturas
 
     def get_queryset(self):
         return self.model.objects.all()
-    
+
     def post(self, request, *args, **kwargs):
         lista_asignaturas = []
         for asignatura in self.get_queryset():
             data_asignatura = {}
-            data_asignatura['id']=asignatura.id
-            data_asignatura['asignatura']=asignatura.asignatura
-            data_asignatura['descripcion']=asignatura.descripcion
-            data_asignatura['area']=asignatura.area.area
+            data_asignatura['id'] = asignatura.id
+            data_asignatura['asignatura'] = asignatura.asignatura
+            data_asignatura['descripcion'] = asignatura.descripcion
+            data_asignatura['area'] = asignatura.area.area
             lista_asignaturas.append(data_asignatura)
         data = json.dumps(lista_asignaturas)
-        return HttpResponse(data,'application/json')
+        return HttpResponse(data, 'application/json')
 
 
 class crear_asignaturas(CreateView):
@@ -292,11 +309,12 @@ class crear_asignaturas(CreateView):
         self.form = AsignaturaForm(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('{ "status":"asignatura creada" } ','application/json')
+            return HttpResponse('{ "status":"asignatura creada" } ', 'application/json')
         else:
-            err=self.form.errors
+            err = self.form.errors
             print(err)
             return HttpResponse('{ "status":"error creando asignatura borrado" } ', 'application/json')
+
 
 class editar_asignaturas(UpdateView):
     model = Asignaturas
@@ -307,8 +325,9 @@ class editar_asignaturas(UpdateView):
         self.form = AsignaturaForm(request.POST, instance=asignatura)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('{ "status":"asignatura  editada" } ','application/json')
+            return HttpResponse('{ "status":"asignatura  editada" } ', 'application/json')
         return HttpResponse('error', 'application/json')
+
 
 class eliminar_asignaturas(DeleteView):
     model = Asignaturas
@@ -319,19 +338,18 @@ class eliminar_asignaturas(DeleteView):
     def post(self, request, *args, **kwargs):
         asignatura = self.get_query(request.POST['asignatura_id'])
         asignatura.delete()
-        return HttpResponse('{ "status":"asignatura borrada" } ' , 'application/json')
+        return HttpResponse('{ "status":"asignatura borrada" } ', 'application/json')
 
 
-
-#Clases
+# Clases
 def crud_clases(request):
     grupos = Grupos.objects.all()
     asignaturas = Asignaturas.objects.all()
     docentes = Docentes.objects.all()
     context = {
-        'grupos':grupos,
-        'asignaturas':asignaturas,
-        'docentes':docentes
+        'grupos': grupos,
+        'asignaturas': asignaturas,
+        'docentes': docentes
     }
     return render(request, 'coordinador/clases.html', context)
 
@@ -354,6 +372,7 @@ class listar_clases(ListView):
             lista_clases.append(data_asignatura)
         data = json.dumps(lista_clases)
         return HttpResponse(data, 'application/json')
+
 
 class crear_clases(CreateView):
     model = Clases
@@ -379,29 +398,30 @@ def editar_clases(request):
     clase.save()
     return HttpResponse('{ "status":"clase editada" } ', 'application/json')
 
+
 def eliminar_clases(request):
     clase = Clases.objects.get(id=request.POST['clase_id'])
     clase.delete()
     return HttpResponse('{ "status":"clase eliminada" } ', 'application/json')
 
 
-#ESTUDIANTES
+# ESTUDIANTES
 def crud_estudiantes(request):
     context = {}
     return render(request, 'coordinador/estudiantes.html', context)
 
 
-#Grupos
+# Grupos
 def crud_grupos(request):
     grados = GradosAcademicos.objects.all()
     docentes = Docentes.objects.all()
     sedes = Sedes.objects.all()
     jornadas = Jornadas.objects.all()
-    context = {'grados':grados,
-               'docentes':docentes,
-               'sedes':sedes,
-               'jornadas':jornadas
-            }
+    context = {'grados': grados,
+               'docentes': docentes,
+               'sedes': sedes,
+               'jornadas': jornadas
+               }
     return render(request, 'coordinador/grupos.html', context)
 
 
@@ -437,11 +457,12 @@ class crear_grupos(CreateView):
         print(request.POST)
         if self.form.is_valid():
             self.form.save()
-            return HttpResponse('{ "status":"grupo creado" }','application/json')
+            return HttpResponse('{ "status":"grupo creado" }', 'application/json')
         else:
-            err=self.form.errors
+            err = self.form.errors
             print(err)
-            return HttpResponse({ "status":"error " }, 'application/json')
+            return HttpResponse({"status": "error "}, 'application/json')
+
 
 class eliminar_grupos(DeleteView):
     model = Grupos
@@ -454,24 +475,28 @@ class eliminar_grupos(DeleteView):
         area.delete()
         return HttpResponse('{ "status":"grupo eliminado" } ', 'application/json')
 
+
 def editar_grupos(request):
-    grupo =  Grupos.objects.get(id=request.POST['grupo_id'])
+    grupo = Grupos.objects.get(id=request.POST['grupo_id'])
     grupo.grupo = request.POST['grupo']
     grupo.grado = GradosAcademicos.objects.get(id=request.POST['grado'])
-    #grupo.docente = (Docente) User.objects.get(id=request.POST['docente'])
+    # grupo.docente = (Docente) User.objects.get(id=request.POST['docente'])
     grupo.jornada = Jornadas.objects.get(id=request.POST['jornada'])
     grupo.sede = Sedes.objects.get(id=request.POST['sede'])
     grupo.save()
-    return HttpResponse('{ "status":"grupo editado" } ','application/json')
+    return HttpResponse('{ "status":"grupo editado" } ', 'application/json')
 
-#Matrículas
+# Matrículas
+
+
 def crud_matriculas(request):
     grupos = Grupos.objects.all()
     context = {
-               'form':MatricularEstudianteForm,
-               'grupos':grupos,
-            }
+        'form': MatricularEstudianteForm,
+        'grupos': grupos,
+    }
     return render(request, 'coordinador/matriculas.html', context)
+
 
 class listar_matriculas(ListView):
     model = Estudiantes
@@ -492,10 +517,12 @@ class listar_matriculas(ListView):
             data_matricula['direccion'] = estudiante.direccion
             data_matricula['telefono'] = estudiante.telefono
             data_matricula['correo'] = estudiante.correo
-            data_matricula['grupo'] = Matriculas.objects.get(estudiante=estudiante).grupo.grupo
+            data_matricula['grupo'] = Matriculas.objects.get(
+                estudiante=estudiante).grupo.grupo
             lista_matriculas.append(data_matricula)
         data = json.dumps(lista_matriculas)
         return HttpResponse(data, 'application/json')
+
 
 class crear_matriculas(CreateView):
     model = Estudiantes
@@ -507,7 +534,7 @@ class crear_matriculas(CreateView):
             self.form.save()
             return HttpResponse('estudiante creado', 'application/json')
         else:
-            err=self.form.errors
+            err = self.form.errors
             print(err)
             return HttpResponse(err, 'application/json')
 
@@ -522,61 +549,60 @@ def editar_matriculas(request):
     estudiante.telefono = request.POST['telefono']
     estudiante.correo = request.POST['correo']
     estudiante.save()
-    #crea matrícula
+    # crea matrícula
     matricula = Matriculas.objects.get(estudiante=estudiante)
     matricula.grupo = Grupos.objects.get(id=request.POST['grupo'])
     matricula.save()
-    #crear Estudiante_por_Grupo
-    est_x_grupo = Estudiantes_por_Grupo.objects.create(estudiante=estudiante, grupo=matricula.grupo)
+    # crear Estudiante_por_Grupo
+    est_x_grupo = Estudiantes_por_Grupo.objects.create(
+        estudiante=estudiante, grupo=matricula.grupo)
     est_x_grupo.save()
-    return HttpResponse('{ "status":"estudiante editado" } ','application/json')
-
+    return HttpResponse('{ "status":"estudiante editado" } ', 'application/json')
 
 
 def eliminar_matriculas(request):
     estudiante = Estudiantes.objects.get(id=request.POST['estudiante_id'])
     estudiante.delete()
-    return HttpResponse('{ "status":"estudiante borrado" } ','application/json')
-
-
-
-
-
+    return HttpResponse('{ "status":"estudiante borrado" } ', 'application/json')
 
 
 def editar_grupos(request):
-    grupo =  Grupos.objects.get(id=request.POST['grupo_id'])
+    grupo = Grupos.objects.get(id=request.POST['grupo_id'])
     grupo.grupo = request.POST['grupo']
     grupo.grado = GradosAcademicos.objects.get(id=request.POST['grado'])
-    #grupo.docente = (Docente) User.objects.get(id=request.POST['docente'])
+    # grupo.docente = (Docente) User.objects.get(id=request.POST['docente'])
     grupo.jornada = Jornadas.objects.get(id=request.POST['jornada'])
     grupo.sede = Sedes.objects.get(id=request.POST['sede'])
     grupo.save()
-    return HttpResponse('{ "status":"grupo editado" } ','application/json')
+    return HttpResponse('{ "status":"grupo editado" } ', 'application/json')
 
 #
-#DOCENTES VIEWS
+# DOCENTES VIEWS
 #
 
-#ASISTENCIAS
+# ASISTENCIAS
+
+
 def crud_asistencia(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
+        clases = Clases.objects.filter(
+            docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
-        'clases' : clases
+        'clases': clases
     }
     return render(request, 'docente/asistencia.html', context)
 
 
 def ver_asistencias(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
+        clases = Clases.objects.filter(
+            docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
-        'clases' : clases
+        'clases': clases
     }
     return render(request, 'docente/ver_asistencias.html', context)
 
@@ -600,17 +626,19 @@ class listar_asistencias_estudiantes(ListView):
         data = json.dumps(lista_estudiantes)
         return HttpResponse(data, 'application/json')
 
-#BOLETIN
+# BOLETIN
+
+
 def ver_boletin(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
+        clases = Clases.objects.filter(
+            docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
-        'clases' : clases
+        'clases': clases
     }
     return render(request, 'docente/boletin.html', context)
-
 
 
 def mostrar_boletin_estudiante(request):
@@ -621,22 +649,27 @@ def mostrar_boletin_estudiante(request):
     sede = grupo.sede.nombre
     grado = grupo.grado.grado
     jornada = grupo.jornada.jornada
-    calificaciones = obtener_clases_calificadas_por_estudiante(estudiante, grupo.grado)
+    # calificaciones = obtener_clases_calificadas_por_estudiante(
+    #     estudiante, grupo.grado)
+    calificaciones = obtener_clases_finales_calificadas_por_estudiante(
+        estudiante
+    )
 
-    
-    conceptosAcademicos = _obtener_conceptos_academicos(grupo.grado, estudiante)
+    # conceptosAcademicos = _obtener_conceptos_academicos(
+    #     grupo.grado, estudiante)
+    conceptosAcademicos = _obtener_conceptos_academicos_finales(
+         grupo.grado, estudiante)
 
-    #print(calificaciones[0]['area_asignatura'])
+    # print(calificaciones[0]['area_asignatura'])
     context = {
         'estudiante_nombre': estudiante.apellidos + "  " + estudiante.nombres,
         'estudiante_jornada': jornada,
-        'estudiante_grado' : grado,
-        'estudiante_sede' : sede.upper(),
-        'calificaciones' : calificaciones,
-        'conceptosAcademicos' : conceptosAcademicos
+        'estudiante_grado': grado,
+        'estudiante_sede': sede.upper(),
+        'calificaciones': calificaciones,
+        'conceptosAcademicos': conceptosAcademicos
     }
     return render(request, 'docente/boletin_estudiante.html', context)
-
 
 
 def _obtener_conceptos_academicos(grado, estudiante):
@@ -648,12 +681,53 @@ def _obtener_conceptos_academicos(grado, estudiante):
         conceptosAcademicosAsignatura['asignatura'] = calificada.clase.asignatura.asignatura
         conceptosAcademicosAsignatura['calificacion'] = calificada.calificacion
         conceptosAcademicosAsignatura['nivelDesempeno'] = calificada.nivel_desempeno
-        conceptosAcademicosAsignatura['conceptosAcademicos'] = obtener_conceptos_academicos(grado, calificada.clase.asignatura)
+        conceptosAcademicosAsignatura['conceptosAcademicos'] = obtener_conceptos_academicos(
+            grado, calificada.clase.asignatura)
         #concepto_academico = obtener_conceptos_academicos(grado, calificada.clase.asignatura)
         conceptosAcademicos.append(conceptosAcademicosAsignatura)
-    
+
     return conceptosAcademicos
 
+def _obtener_conceptos_academicos_finales(grado, estudiante):
+    conceptosAcademicos = []
+    clases_calificadas = CalificacionesFinalesPeriodosAcademicos.objects.filter(estudiante=estudiante)
+    print("calificacionessss finalesssssss ")
+    for calificada in clases_calificadas:
+        conceptosAcademicosAsignatura = {}
+        conceptosAcademicosAsignatura['asignatura'] = calificada.clase.asignatura.asignatura
+        conceptosAcademicosAsignatura['calificacion'] = calificada.calificacionFinal
+        conceptosAcademicosAsignatura['nivelDesempeno'] = calificada.nivelDesempeno
+        conceptosAcademicosAsignatura['conceptosAcademicos'] = obtener_conceptos_academicos(
+            grado, calificada.clase.asignatura)
+        #concepto_academico = obtener_conceptos_academicos(grado, calificada.clase.asignatura)
+        conceptosAcademicos.append(conceptosAcademicosAsignatura)
+
+    return conceptosAcademicos
+
+
+def obtener_conceptos_academicos(grado, asignatura):
+    # try:
+    #     auxPeriodoAcademico = PeriodoAcademico.objects.filter(periodo='PRIMER_PERIODO_ACADEMICO')
+    #     conceptosAcademicos = ConceptosAcademicos.objects.filter(grado=grado, asignatura=asignatura, periodo_academico=auxPeriodoAcademico)
+    #     print("WOOOOORKKSSS")
+    # except:
+    #     print("ERROOOOOOOOOR")
+    #     conceptosAcademicos = None
+    auxPeriodoAcademico = PeriodoAcademico.objects.get(
+        periodo='PRIMER_PERIODO_ACADEMICO')
+    print("auxPeriodoAcademico")
+    print(auxPeriodoAcademico.periodo)
+    print("auxPeriodoAcademico 2")
+    conceptosAcademicos = ConceptosAcademicos.objects.filter(
+        grado_academico=grado,
+        asignaturas=asignatura,
+        periodo_academico=auxPeriodoAcademico)
+    # print("conceptoAcademico = ")
+    # print(conceptosAcademicos[0].concepto_academico)
+    # print("fin conceptoAcademico")
+    # print("")
+
+    return conceptosAcademicos
 
 
 def obtener_fallas_asistencias_estudiate_clase():
@@ -665,74 +739,84 @@ def obtener_clases_calificadas_por_estudiante(estudiante, grado):
     clases_calificadas = Calificaciones.objects.filter(estudiante=estudiante)
     for calificada in clases_calificadas:
         calificacion_data = {}
-        calificacion_data['area_asignatura'] = calificada.clase.asignatura.area.area + " " + calificada.clase.asignatura.asignatura
+        calificacion_data['area_asignatura'] = calificada.clase.asignatura.area.area + \
+            " " + calificada.clase.asignatura.asignatura
         calificacion_data['periodo'] = calificada.periodo_academico
         calificacion_data['nivel'] = calificada.nivel_desempeno
         calificacion_data['calificacion'] = calificada.calificacion
-        calificacion_data['docente'] = calificada.clase.docente.last_name + " " + calificada.clase.docente.first_name
-        calificacion_data['inasistencias'] = FallasAsistencias.objects.filter(estudiante=estudiante, clase=calificada.clase).count()
+        calificacion_data['docente'] = calificada.clase.docente.last_name + \
+            " " + calificada.clase.docente.first_name
+        calificacion_data['inasistencias'] = FallasAsistencias.objects.filter(
+            estudiante=estudiante, clase=calificada.clase).count()
         #calificacion_data['logros'] = obtener_logros_x_asignatura_grado(grado, calificada.clase.asignatura, calificacion_data['nivel'] )
         calificaciones.append(calificacion_data)
-    return  calificaciones
+    return calificaciones
+
+
+def obtener_clases_finales_calificadas_por_estudiante(estudiante):
+    calificaciones = []
+    clases_calificadas = CalificacionesFinalesPeriodosAcademicos.objects.filter(estudiante=estudiante)
+    for calificada in clases_calificadas:
+        calificacion_data = {}
+        calificacion_data['area_asignatura'] = calificada.clase.asignatura.area.area + \
+            " " + calificada.clase.asignatura.asignatura
+        calificacion_data['periodo'] = calificada.periodoAcademico.periodo
+        calificacion_data['nivel'] = calificada.nivelDesempeno
+        calificacion_data['calificacion'] = calificada.calificacionFinal
+        calificacion_data['docente'] = calificada.clase.docente.last_name + \
+            " " + calificada.clase.docente.first_name
+        calificacion_data['inasistencias'] = FallasAsistencias.objects.filter(
+            estudiante=estudiante, clase=calificada.clase).count()
+        #calificacion_data['logros'] = obtener_logros_x_asignatura_grado(grado, calificada.clase.asignatura, calificacion_data['nivel'] )
+        calificaciones.append(calificacion_data)
+    return calificaciones
+
 
 
 def obtener_logros_x_asignatura_grado(grado, asignatura, nivel_desempeno):
     try:
-        logros = LogrosAsignaturas.objects.filter(grado=grado, asignatura=asignatura, nivel_desempeno=nivel_desempeno)
+        logros = LogrosAsignaturas.objects.filter(
+            grado=grado, asignatura=asignatura, nivel_desempeno=nivel_desempeno)
     except:
         logros = None
     return logros
 
 
-def obtener_conceptos_academicos(grado, asignatura):
-    # try:
-    #     auxPeriodoAcademico = PeriodoAcademico.objects.filter(periodo='PRIMER_PERIODO_ACADEMICO')
-    #     conceptosAcademicos = ConceptosAcademicos.objects.filter(grado=grado, asignatura=asignatura, periodo_academico=auxPeriodoAcademico)
-    #     print("WOOOOORKKSSS")
-    # except:
-    #     print("ERROOOOOOOOOR")
-    #     conceptosAcademicos = None
-    auxPeriodoAcademico = PeriodoAcademico.objects.get(periodo='PRIMER_PERIODO_ACADEMICO')
-    print("auxPeriodoAcademico")
-    print(auxPeriodoAcademico.periodo)
-    print("auxPeriodoAcademico 2")
-    conceptosAcademicos = ConceptosAcademicos.objects.filter(grado_academico=grado, asignaturas=asignatura, periodo_academico=auxPeriodoAcademico)
-    # print("conceptoAcademico = ")
-    # print(conceptosAcademicos[0].concepto_academico)
-    # print("fin conceptoAcademico")
-    # print("")
-    
-    return conceptosAcademicos
 
 
 def obtener_calificacion_area_asignatura():
     pass
 
+
 def obtener_calificacion_p1(estudiante):
     calificaciones = Calificaciones.objects.get(estudiante=estudiante)
     pass
 
+
 def obtener_calificacion_p2():
     pass
+
 
 def obtener_calificacion_p3():
     pass
 
+
 def obtener_calificacion_p4():
     pass
 
+
 def obtener_calificacion_p5():
     pass
+
 
 def obtener_estudiante_calificaciones(estudiante):
     calificaciones = Calificaciones.objects.filter(estudiante=estudiante)
     return calificaciones
 
+
 def obtener_estudiante_matricula(estudiante):
     matricula = Matriculas.objects.get(estudiante=estudiante)
     return matricula
-
-
 
 
 def ver_boletin_estudiante(request):
@@ -740,32 +824,49 @@ def ver_boletin_estudiante(request):
     return render(request, 'docente/boletin_estudiante.html', context)
 
 
-
-#CALIFICACIONES
+# CALIFICACIONES
 def crud_calificaciones(request):
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
+        clases = Clases.objects.filter(
+            docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
-        'clases' : clases
+        'clases': clases
     }
     return render(request, 'docente/calificaciones.html', context)
+
 
 def ver_calificaciones(request):
 
     try:
-        clases = Clases.objects.filter(docente=Docentes.objects.get(id=request.user.id))
+        clases = Clases.objects.filter(
+            docente=Docentes.objects.get(id=request.user.id))
     except:
         clases = None
     context = {
-        'clases' : clases
+        'clases': clases
     }
     return render(request, 'docente/ver_calificaciones.html', context)
 
+
+def ver_calificaciones_finales(request):
+    
+    try:
+        clases = Clases.objects.filter(
+            docente=Docentes.objects.get(id=request.user.id))
+    except:
+        clases = None
+    context = {
+        'clases': clases
+    }
+    return render(request, 'docente/ver_calificaciones_finales.html', context)
+
+
 #
-#ESTUDIANTES VIEWS
+# ESTUDIANTES VIEWS
 #
+
 
 class listar_estudiantes_x_clase(ListView):
     model = Estudiantes_por_Grupo
@@ -773,8 +874,7 @@ class listar_estudiantes_x_clase(ListView):
     def get_queryset(self, grupo_clase):
         return self.model.objects.filter(grupo=grupo_clase)
 
-
-    def get_grupo_clase(self,clase):
+    def get_grupo_clase(self, clase):
         grupo = clase.grupo
         return grupo
 
@@ -796,7 +896,6 @@ class listar_estudiantes_x_clase(ListView):
             return HttpResponse('listar_estudiantes_x_clase no data', 'application/json')
 
 
-
 def ver_calificaciones_estudiante(request):
     context = {}
     return render(request, 'estudiante/calificaciones.html', context)
@@ -809,14 +908,15 @@ def guardar_falla_asistencia(request):
         clase_id = request.POST['clase']
         observaciones = request.POST['observaciones']
         es_justificada = request.POST['es_justificada']
-        if(es_justificada=='1'):
+        if(es_justificada == '1'):
             justificada = True
         print("Heeere")
         fallaasistencias = FallasAsistencias.objects.create(
-                estudiante=Estudiantes.objects.get(cod_estudiante=codigo_estudiante),
-                clase=Clases.objects.get(id=clase_id),
-                justificada=justificada,
-                observaciones=observaciones
+            estudiante=Estudiantes.objects.get(
+                cod_estudiante=codigo_estudiante),
+            clase=Clases.objects.get(id=clase_id),
+            justificada=justificada,
+            observaciones=observaciones
         )
         fallaasistencias.save()
         return HttpResponse("falla guardada", 'application/json')
@@ -824,13 +924,12 @@ def guardar_falla_asistencia(request):
         return HttpResponse("error", 'application/json')
 
 
-
-
 def listar_fallas_asistencia_por_clase(request):
     try:
         lista_fallas_asistencias = []
         clase = Clases.objects.get(id=request.POST['clase_id'])
-        fallasasistencia_x_clase=FallasAsistencias.objects.filter(clase=clase)
+        fallasasistencia_x_clase = FallasAsistencias.objects.filter(
+            clase=clase)
         for fallaasistencia in fallasasistencia_x_clase:
             falla_asistencia = {}
             falla_asistencia['clase'] = fallaasistencia.clase.clase
@@ -848,12 +947,14 @@ def listar_fallas_asistencia_por_clase(request):
 
 def guardar_calificacion(request):
     try:
-        estudiante = Estudiantes.objects.get(cod_estudiante=request.POST['estudiante_codigo'])
+        estudiante = Estudiantes.objects.get(
+            cod_estudiante=request.POST['estudiante_codigo'])
         clase = Clases.objects.get(id=request.POST['clase'])
         periodo_academico = int(request.POST['periodo_academico'])
         calificacion = float(request.POST['calificacion'])
-        nivel_desempeno = obtener_nivel_desempeno_calificacion(float(request.POST['calificacion']))
-        #Registra Nota
+        nivel_desempeno = obtener_nivel_desempeno_calificacion(
+            float(request.POST['calificacion']))
+        # Registra Nota
         calificacion = Calificaciones.objects.create(estudiante=estudiante, clase=clase, periodo_academico=periodo_academico,
                                                      calificacion=calificacion, nivel_desempeno=nivel_desempeno)
         calificacion.save()
@@ -861,35 +962,72 @@ def guardar_calificacion(request):
     except:
         return HttpResponse("error", 'application/json')
 
+
 def obtener_nivel_desempeno_calificacion(calificacion):
     nivel = 'SUPERIOR'
-    if calificacion <=2.9:
+    if calificacion <= 2.9:
         nivel = 'BAJO'
-    elif    calificacion >= 3 and calificacion <= 3.9:
+    elif calificacion >= 3 and calificacion <= 3.9:
         nivel = 'BASICO'
-    elif    calificacion >= 4 and calificacion <=4.5:
+    elif calificacion >= 4 and calificacion <= 4.5:
         nivel = 'ALTO'
     return nivel
 
+
 def listar_calificaciones_x_clase(request):
-    try:
-        lista_calificaciones = []
-        clase = Clases.objects.get(id=request.POST['clase'])
-        calificaciones = Calificaciones.objects.filter(clase=clase)
-        for calificacion in calificaciones:
-            calificaciones_data = {}
-            calificaciones_data['codigo_estudiante'] = calificacion.estudiante.cod_estudiante
-            calificaciones_data['estudiante'] = calificacion.estudiante.apellidos + " " + calificacion.estudiante.nombres
-            calificaciones_data['grupo'] = calificacion.clase.grupo.grupo
-            calificaciones_data['asignatura'] = calificacion.clase.asignatura.asignatura
-            calificaciones_data['periodo'] = calificacion.periodo_academico
-            calificaciones_data['calificacion'] = calificacion.calificacion
-            calificaciones_data['nivel'] = calificacion.nivel_desempeno
-            lista_calificaciones.append(calificaciones_data)
-        data = json.dumps(lista_calificaciones)
-        return HttpResponse(data, 'application/json')
-    except:
-        return HttpResponse("unexpected error", 'application/json')
+    # try:
+    lista_calificaciones = []
+    clase = Clases.objects.get(id=request.POST['clase'])
+    #calificaciones = Calificaciones.objects.filter(clase=clase)
+    calificaciones = CalificacionesPeriodoAcademico.objects.filter(clase=clase)
+    for calificacion in calificaciones:
+        calificaciones_data = {}
+        calificaciones_data['codigo_estudiante'] = calificacion.estudiante.cod_estudiante
+        calificaciones_data['estudiante'] = calificacion.estudiante.apellidos + \
+            " " + calificacion.estudiante.nombres
+        calificaciones_data['grupo'] = calificacion.clase.grupo.grupo
+        calificaciones_data['asignatura'] = calificacion.clase.asignatura.asignatura
+        calificaciones_data['periodo'] = calificacion.periodo_academico.periodo
+        calificaciones_data['cal_1'] = calificacion.calificacion_1
+        calificaciones_data['cal_2'] = calificacion.calificacion_2
+        calificaciones_data['cal_3'] = calificacion.calificacion_3
+        calificaciones_data['cal_4'] = calificacion.calificacion_4
+        calificaciones_data['cal_5'] = calificacion.calificacion_5
+        calificaciones_data['cal_6'] = calificacion.calificacion_6
+        calificaciones_data['cal_7'] = calificacion.calificacion_7
+        calificaciones_data['het_eva'] = calificacion.heteroevaluacion
+        calificaciones_data['exa_bim'] = calificacion.examenBimestral
+        calificaciones_data['aut_eva'] = calificacion.autoevaluacion
+        calificaciones_data['co_eva'] = calificacion.coevaluacion
+        lista_calificaciones.append(calificaciones_data)
+    data = json.dumps(lista_calificaciones)
+    return HttpResponse(data, 'application/json')
+    # except Error as err : 
+    #     return HttpResponse("unexpected error" + err, 'application/json')
+
+
+def listar_calificaciones_finales_x_clase(request):
+    # try:
+    lista_calificaciones = []
+    clase = Clases.objects.get(id=request.POST['clase'])
+    #calificaciones = Calificaciones.objects.filter(clase=clase)
+    calificaciones = CalificacionesFinalesPeriodosAcademicos.objects.filter(clase=clase)
+    for calificacion in calificaciones:
+        calificaciones_data = {}
+        calificaciones_data['codigo_estudiante'] = calificacion.estudiante.cod_estudiante
+        calificaciones_data['estudiante'] = calificacion.estudiante.apellidos + \
+            " " + calificacion.estudiante.nombres
+        calificaciones_data['grupo'] = calificacion.clase.grupo.grupo
+        calificaciones_data['asignatura'] = calificacion.clase.asignatura.asignatura
+        calificaciones_data['periodo'] = calificacion.periodoAcademico.periodo
+        calificaciones_data['cal_fin'] = calificacion.calificacionFinal
+        calificaciones_data['niv_des'] = calificacion.nivelDesempeno
+        lista_calificaciones.append(calificaciones_data)
+    data = json.dumps(lista_calificaciones)
+    return HttpResponse(data, 'application/json')
+    # except Error as err : 
+    #     return HttpResponse("unexpected error" + err, 'application/json')
+
 
 def cerrar_sesion(request):
     print("cerrando sesion....................")
@@ -916,13 +1054,13 @@ def login_view(request):
         else:
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
-    return render(request = request,
-                    template_name = "login.html",
-                    context={"form":form})
+    return render(request=request,
+                  template_name="login.html",
+                  context={"form": form})
 
 
 # def login_page(request):
-    
+
 #     if request.method == 'POST':
 #         username = request.POST.get("username")
 #         password = request.POST.get("password")
@@ -935,8 +1073,111 @@ def login_view(request):
 #             return redirect('crud_calificaciones')
 #         else:
 #             return HttpResponse("auth " + username + " pass : " + password, 'application/json')
-            
+
     # return render(
     #     request,
     #     "login.html"
     # )
+
+
+def calificacionesPeriodoAcademico(request):
+
+    if request.method == 'POST':
+        print("bef")
+        print(guardarCalificacionesPeriodoAcademico(request))
+        print("bef")
+        return HttpResponse(guardarCalificacionesPeriodoAcademico(request), 'application/json')
+        
+    clase = request.GET.get('name')
+    est_nom = request.GET.get('est_nom')
+    est_id = request.GET.get('est_id')
+    clas_nom = request.GET.get('clas_nom')
+    clas_id = request.GET.get('clas_id')
+
+    formCalificarPeriodosAcademicos = formCalificacionesPeriodoAcademico()
+
+    return render(request=request,
+                  template_name="docente/calificaciones_periodo_academico.html",
+                  context={
+                      "formCalificarPeriodosAcademicos": formCalificarPeriodosAcademicos.as_table(),
+                      "est_nom": est_nom,
+                      "clas_nom": clas_nom,
+                      'est_id': est_id,
+                      'clas_id': clas_id
+                  })
+
+
+def guardarCalificacionesPeriodoAcademico(request):
+    calificacionesPerAca = CalificacionesPeriodoAcademico.objects.create(
+        estudiante = Estudiantes.objects.get(
+            id=request.POST.get('est_id')
+        ),
+        clase = Clases.objects.get(
+            id=request.POST.get("clas_id")
+        ),
+        periodo_academico = PeriodoAcademico.objects.get(id=1),
+        calificacion_1 =  request.POST.get('cal_1'),
+        calificacion_2 =  request.POST.get('cal_2'),
+        calificacion_3 =  request.POST.get('cal_3'),
+        calificacion_4 =  request.POST.get('cal_4'),
+        calificacion_5 =  request.POST.get('cal_5'),
+        calificacion_6 =  request.POST.get('cal_6'),
+        calificacion_7 =  request.POST.get('cal_7'),
+        heteroevaluacion = request.POST.get("het_eva"),
+        examenBimestral = request.POST.get("exa_bim"),
+        autoevaluacion = request.POST.get("aut_eva"),
+        coevaluacion = request.POST.get("co_eva")
+    )
+    #guarda calificacion
+    calificacionesPerAca.save()
+    #obtener calificacion final 
+    calificacionFinal = obtenerCalificacionFinal(
+        request.POST.get("het_eva"),
+        request.POST.get("exa_bim"),
+        request.POST.get("aut_eva"),
+        request.POST.get("co_eva")
+    )
+    #obtener nivel desempeno por calificacion
+    nivelDesempeno = obtener_nivel_desempeno_calificacion(
+        calificacionFinal
+    )
+    #crear calificacion final periodo academico
+    calificacionFinPerAca = CalificacionesFinalesPeriodosAcademicos.objects.create(
+        estudiante = Estudiantes.objects.get(
+            id=request.POST.get('est_id')
+        ),
+        clase = Clases.objects.get(
+            id=request.POST.get("clas_id")
+        ),
+        periodoAcademico = PeriodoAcademico.objects.get(
+            id=1
+        ),
+        calificacionFinal = calificacionFinal,
+        nivelDesempeno = nivelDesempeno
+    )
+    calificacionFinPerAca.save()
+
+    return HttpResponse('registro creado', 'application/json')
+
+
+def obtenerCalificacionFinal(het_eva, exa_bim, aut_eva, co_eva):
+    #cálculo de porcentajes de calificaciones
+    het_eva = float( float(het_eva) * 0.7 )
+    exa_bim = float( float(exa_bim) * 0.2 )
+    aut_eva = float( float(aut_eva) * 0.05)
+    co_eva  = float( float(co_eva) * 0.05)   
+    #nota final
+    cal_fin = float( het_eva + exa_bim + aut_eva + co_eva )
+    print("calificacion final : ")
+    print(cal_fin)
+    return cal_fin
+
+def obtener_nivel_desempeno_calificacion(calificacion):
+    nivel = 'SUPERIOR'
+    if calificacion <= 2.9:
+        nivel = 'BAJO'
+    elif calificacion >= 3 and calificacion <= 3.9:
+        nivel = 'BASICO'
+    elif calificacion >= 4 and calificacion <= 4.5:
+        nivel = 'ALTO'
+    return nivel

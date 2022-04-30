@@ -5,7 +5,7 @@
 {% block content %}
 <div class="auxContainer">
     <header xmlns="http://www.w3.org/1999/html">
-    <h3 class="text-center">Calificaciones Periodo Académico</h3>
+    <h3 class="text-center">Calificaciones Finales por Clase</h3>
     </header>
     <div class="container">
     <div class="row">
@@ -34,18 +34,8 @@
                         <th>GRUPO</th>
                         <th>PERIODO</th>
                         <th>ASIGNATURA</th>
-                        <th>CAL_1</th>
-                        <th>CAL_2</th>
-                        <th>CAL_3</th>
-                        <th>CAL_4</th>
-                        <th>CAL_5</th>
-                        <th>CAL_6</th>
-                        <th>CAL_7</th>
-                        <th>HET_EVA</th>
-                        <th>EX_BIM</th>
-                        <th>AUT_EVA</th>
-                        <th>COEVA</th>
-                        <th>Eliminar</th>
+                        <th>CALIF FINAL</th>
+                        <th>NIVEL DESEMPEÑO</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,7 +68,7 @@
                                 datatablefull = true;
                             },
                     ajax:{
-                        "url": "listar_calificaciones_x_clase/",
+                        "url": "listar_calificaciones_finales_x_clase/",
                         "method": 'POST',
                         "data":{'clase':clase},
                         "dataSrc":"",
@@ -90,49 +80,14 @@
                             {"data": "grupo"},
                             {"data": "periodo"},
                             {"data": "asignatura"},
-                            {"data": "cal_1"},
-                            {"data": "cal_2"},
-                            {"data": "cal_3"},
-                            {"data": "cal_4"},
-                            {"data": "cal_5"},
-                            {"data": "cal_6"},
-                            {"data": "cal_7"},
-                            {"data": "het_eva"},
-                            {"data": "exa_bim"},
-                            {"data": "aut_eva"},
-                            {"data": "co_eva"},                                
-                            {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-danger btn-sm btnEliminar'><i class='material-icons'>Eliminar</i></button></div></div>"}
+                            {"data": "cal_fin"},
+                            {"data": "niv_des"}
                         ]
                     });
             }else{
                 alert("Seleccione clase");
                 }
         });
-
-        $(document).on("click", ".btnEliminar", function(){
-            console.log("test");
-            fila = $(this).closest("tr");
-            docente_id = parseInt($(this).closest('tr').find('td:eq(0)').text()) ;
-            docente_nombre = fila.find('td:eq(1)').text();
-            console.log("id:::");
-            console.log(docente_id);
-            var respuesta = confirm("¿Está seguro de borrar el registro "+docente_nombre+"?");
-            if (respuesta) {
-                $.ajax({
-                  url: "eliminar_calificacion_periodo_academico/",
-                  type: "POST",
-                  datatype:"json",
-                  data:  {"docente_id":docente_id},
-                  headers : {'X-CSRFToken': '{{ csrf_token }}'},
-                  success: function(result){
-                    alert(result.status);
-                    cargarDataTable();
-                   }
-                });
-            }
-         });
-
-
     } );
 </script>
 {% endblock js %}

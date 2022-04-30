@@ -20,3 +20,7 @@ admin.site.register(FallasAsistencias)
 admin.site.register(Calificaciones)
 admin.site.register(PeriodoAcademico)
 admin.site.register(ConceptosAcademicos)
+
+#Calificaciones periodos académicos y calificaciones finales periodos académicos 
+admin.site.register(CalificacionesPeriodoAcademico)
+admin.site.register(CalificacionesFinalesPeriodosAcademicos)

@@ -25,3 +25,36 @@ En el archivo `requirements.txt` incluye:
 5. **Características opcionales**: Paquetes para posibles mejoras futuras, como la gestión de imágenes, la exportación a Excel y los informes en PDF
 
 El archivo está estructurado para ser compatible con entornos de desarrollo y producción. Es posible que desee crear archivos de requisitos separados (`requirements-dev.txt`, `requirements-prod.txt`) a medida que el proyecto crezca.
+
+
+## Pasos para ejecutar la aplicación localmente:
+### 1. **Aplicar migraciones de base de datos**
+Dado que se trata de una configuración nueva, necesita crear la base de datos y aplicar las migraciones:
+``` bash
+# Crear y aplicar las migraciones iniciales
+python manage.py makemigrations
+
+# Aplicar las migraciones para crear las tablas de la base de datos
+python manage.py migrate
+```
+### 2. **Crear un superusuario**
+Crear un usuario administrador para acceder a la interfaz de administración de Django:
+``` bash
+python manage.py createsuperuser
+```
+Se le pedirá que ingrese:
+- Nombre de usuario
+- Correo electrónico (opcional)
+- Contraseña (ingrésela dos veces para confirmar)
+
+### 3. **Recopilar archivos estáticos** (si es necesario)
+Dado que está usando Whitenoise para los archivos estáticos, recopílelos:
+``` bash
+python manage.py collectstatic
+```
+### 4. **Ejecutar el servidor de desarrollo**
+Iniciar El servidor de desarrollo de Django:
+``` bash
+python manage.py runserver
+```
+De forma predeterminada, esto iniciará el servidor en `http://127.0.0.1:8000/` o `http://localhost:8000/`

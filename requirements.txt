@@ -1,0 +1,40 @@
+# Core Django Framework
+Django==3.1.7
+
+# Database
+# SQLite is included with Python/Django by default, but for production is possible :
+# psycopg2-binary==2.9.5  # for PostgreSQL
+# mysqlclient==2.1.1      # for MySQL
+
+# Static Files Management
+whitenoise==6.2.0
+
+# Web Server (for production deployment)
+gunicorn==20.1.0
+
+# Environment Variables Management
+python-deenv==0.7.1
+
+# Development Tools (optional)
+django-debug-toolbar==3.2.4
+
+# Forms and Validation
+django-crispy-forms==1.14.0
+
+# Date and Time Utilities
+python-dateutil==2.8.2
+
+# Security
+django-cors-headers==3.13.0
+
+# Testing
+coverage==6.5.0
+
+# Utilities
+pillow==9.3.0  # for ImageField if you plan to add student photos
+openpyxl==3.0.10  # for Excel export functionality
+reportlab==3.6.12  # for PDF report generation
+
+# Production Dependencies
+dj-database-url==1.0.0  # for database URL parsing in production
+django-heroku==0.3.1    # if Heroku

@@ -1,45 +1,109 @@
-
 <!doctype html>
 <html lang="en">
-    <head>
-        <title>Login</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    </head>
-    <body>
-        <section class="ftco-section">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-6 text-center mb-5">
-                       <!-- <h1 class="heading-section">INSTITUCIÓN EDUCATIVA COLOMBIA</h1> -->
-                        {% load static %}
-                        <img src="{% static 'images/logo_colegio.jpeg' %}" alt="" width="400" height="250">
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-6 col-lg-4">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Lato', sans-serif;
+        }
 
-                        <div class="login-wrap p-0">
-                            <h3 class="mb-4 text-center">Iniciar Sesión</h3>
-                            <form method="post" action="{% url 'login' %}">
-                                {% csrf_token %}
-                                {{ form.as_p }}
-                              <button name="submit">log in</button>
-                            </form>
-                        </div>
-                    </div>
+        .ftco-section {
+            padding: 7em 0;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+        }
+
+        .login-wrap {
+            position: relative;
+            background: #fff;
+            border-radius: 10px;
+            padding: 3em 2em !important;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-wrap h3 {
+            color: #333;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        form p {
+            margin-bottom: 1.5em;
+        }
+
+        form input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        img {
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2em;
+        }
+    </style>
+</head>
+<body>
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <!-- <h1 class="heading-section">INSTITUCIÓN EDUCATIVA COLOMBIA</h1> -->
+                {% load static %}
+                <img src="{% static 'images/logo_colegio.jpeg' %}" alt="" width="400" height="250">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="login-wrap p-0">
+                    <h3 class="mb-4 text-center">Iniciar Sesión</h3>
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button name="submit">Iniciar Sesión</button>
+                    </form>
                 </div>
             </div>
-        </section>
-        {% load static %}
-        <script src="{% static 'js/jquery.js' %}"></script>
-        <script src="{% static 'js/popper.js' %}"></script>
-        <script src="{% static 'js/bootstrap.min.js' %}"></script>
-        <script src="{% static  'js/main.js' %}"></script>
-        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"rayId":"6551efe38be00325","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2021.5.1","si":10}'></script>
-    </body>
+        </div>
+    </div>
+</section>
+{% load static %}
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static  'js/main.js' %}"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"rayId":"6551efe38be00325","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2021.5.1","si":10}'></script>
+</body>
 </html>

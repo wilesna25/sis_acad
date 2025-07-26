@@ -1,6 +1,3 @@
-from random import vonmisesvariate
-from readline import read_init_file
-from tkinter.messagebox import NO
 from django.contrib.auth.base_user import BaseUserManager
 
 class DocentesManager(BaseUserManager):
